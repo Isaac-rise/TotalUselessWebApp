@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <script src="/logik.js"></script>
+  <link rel="stylesheet" href="/style-copy.css">
+  <link rel="icon" href="icon.png" type="image/png">
+  <link rel="manifest" href="manifest.json">
+  
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Meine WebApp">
+</head>
+
+<body>
+
+<!-- Planung
+
+Seiten:
+1. Seite (Hub, Statistiks, Listen) 
+2. Seite (Lagerhinzufügen, Lagerübersicht)
+3. Seite (eins zu eins Kopie Blog, welche dann immer mit der online Version geupdatet wird)
+
+weitere UI-Elemente:
+1. conflict managment Fenster (wenn beim synchronisieren ein conflict enstanden ist, bei welchem ich zwischen beiden möglichen Zuständen wählen muss um ein Element zu syncen)
+
+syncing:
+
+Blogfreigabe für bestimmte Listen erteilen können:
+
+
+
+-->
+
+<!-- Page 1-->
+<!-- Page 1
+<div class="page">
+
+  <div id="tommorow"><h1>tommorow tommorowtommorowtommorowtommorowtommorowtommorow</h1></div>
+  <div id="hub"><h1>hub hub hub hub hub</h1></div>  
+  <div id="today"><h1>todaytodaytodaytodaytodaytoday</h1></div>  
+  <div id="graph-view" class=""><h1>graph-viewgraph-viewgraph-viewgraph-viewgraph-viewgraph-viewgraph-view</h1></div>  
+  <div id="preview-of-graph-view"><h1>preview-of-graph-viewpreview-of-graph-viewpreview-of-graph-viewpreview-of-graph-view</h1></div> 
+
+</div>
+-->
+
+
+<div class="viewport-container">
+    <div id="search-bar">
+      <input id="search" type="search">
+  </div>
+
+
+  <div id="page1" class="page">
+    <div id="lists" class="block"><h1>lists lists</h1></div>
+    <div id="statistics" class="block"><h1>statistics</h1></div>
+    <div id="storage" class="block"><h1>storage</h1></div>
+    <div id="meal-plan" class="block"><h1>meal-plan</h1></div>
+  </div>
+    
+  <div id="page2" class="page">
+    
+
+    <div id="calendar-container" class="block">
+      
+      <div id="task-board" class="block-with-position-mark scroll-container">
+        <div id="template-task">
+          <div id="title" class="">Die Mülltonnen rausäumen</div>
+          <div id="type" class="">d</div>
+          <div id="created-at" class="">d</div>
+          <div id="created-on" class="">d</div>
+          <div id="finished-at" class="">d</div>
+          <div id="finished-on" class=""></div>
+          <div id="deadline" class=""></div>
+        </div>
+        <div id="template-task">
+          <div id="title" class="">Die Mülltonnen rausäumen</div>
+          <div id="type" class="">d</div>
+          <div id="created-at" class="">d</div>
+          <div id="created-on" class="">d</div>
+          <div id="finished-at" class="">d</div>
+          <div id="finished-on" class=""></div>
+          <div id="deadline" class=""></div>
+        </div>
+        <div id="template-task">
+          <div id="title" class="">Die Mülltonnen rausäumen</div>
+          <div id="type" class="">d</div>
+          <div id="created-at" class="">d</div>
+          <div id="created-on" class="">d</div>
+          <div id="finished-at" class="">d</div>
+          <div id="finished-on" class=""></div>
+          <div id="deadline" class=""></div>
+        </div>
+        <div id="template-task">
+          <div id="title" class="">Die Mülltonnen rausäumen</div>
+          <div id="type" class="">d</div>
+          <div id="created-at" class="">d</div>
+          <div id="created-on" class="">d</div>
+          <div id="finished-at" class="">d</div>
+          <div id="finished-on" class=""></div>
+          <div id="deadline" class=""></div>
+        </div>
+        <div id="template-task">
+          <div id="title" class="">Die Mülltonnen rausäumen</div>
+          <div id="type" class="">d</div>
+          <div id="created-at" class="">d</div>
+          <div id="created-on" class="">d</div>
+          <div id="finished-at" class="">d</div>
+          <div id="finished-on" class=""></div>
+          <div id="deadline" class=""></div>
+        </div>
+        <div id="template-task">
+          <div id="title" class="">Die Mülltonnen rausäumen</div>
+          <div id="type" class="">d</div>
+          <div id="created-at" class="">d</div>
+          <div id="created-on" class="">d</div>
+          <div id="finished-at" class="">d</div>
+          <div id="finished-on" class=""></div>
+          <div id="deadline" class=""></div>
+        </div>
+        <div id="template-task">
+          <div id="title" class="">Die Mülltonnen rausäumen</div>
+          <div id="type" class="">d</div>
+          <div id="created-at" class="">d</div>
+          <div id="created-on" class="">d</div>
+          <div id="finished-at" class="">d</div>
+          <div id="finished-on" class=""></div>
+          <div id="deadline" class=""></div>
+        </div>
+        <div id="template-task">
+          <div id="title" class="">Die Mülltonnen rausäumen</div>
+          <div id="type" class="">d</div>
+          <div id="created-at" class="">d</div>
+          <div id="created-on" class="">d</div>
+          <div id="finished-at" class="">d</div>
+          <div id="finished-on" class=""></div>
+          <div id="deadline" class=""></div>
+        </div>
+        <div id="template-task">
+          <div id="title" class="">Die Mülltonnen rausäumen</div>
+          <div id="type" class="">d</div>
+          <div id="created-at" class="">d</div>
+          <div id="created-on" class="">d</div>
+          <div id="finished-at" class="">d</div>
+          <div id="finished-on" class=""></div>
+          <div id="deadline" class=""></div>
+        </div>
+        <div id="template-task">
+          <div id="title" class="">Die Mülltonnen rausäumen</div>
+          <div id="type" class="">d</div>
+          <div id="created-at" class="">d</div>
+          <div id="created-on" class="">d</div>
+          <div id="finished-at" class="">d</div>
+          <div id="finished-on" class=""></div>
+          <div id="deadline" class=""></div>
+        </div>
+        <div id="template-task">
+          <div id="title" class="">Die Mülltonnen rausäumen</div>
+          <div id="type" class="">d</div>
+          <div id="created-at" class="">d</div>
+          <div id="created-on" class="">d</div>
+          <div id="finished-at" class="">d</div>
+          <div id="finished-on" class=""></div>
+          <div id="deadline" class=""></div>
+        </div>
+        <div id="template-task">
+          <div id="title" class="">Die Mülltonnen rausäumen</div>
+          <div id="type" class="">d</div>
+          <div id="created-at" class="">d</div>
+          <div id="created-on" class="">d</div>
+          <div id="finished-at" class="">d</div>
+          <div id="finished-on" class=""></div>
+          <div id="deadline" class=""></div>
+        </div>
+        <div id="template-task">
+          <div id="title" class="">Die Mülltonnen rausäumen</div>
+          <div id="type" class="">d</div>
+          <div id="created-at" class="">d</div>
+          <div id="created-on" class="">d</div>
+          <div id="finished-at" class="">d</div>
+          <div id="finished-on" class=""></div>
+          <div id="deadline" class=""></div>
+        </div>
+        <div id="template-task">
+          <div id="title" class="">Die Mülltonnen rausäumen</div>
+          <div id="type" class="">d</div>
+          <div id="created-at" class="">d</div>
+          <div id="created-on" class="">d</div>
+          <div id="finished-at" class="">d</div>
+          <div id="finished-on" class=""></div>
+          <div id="deadline" class=""></div>
+        </div>
+        <div id="template-task">
+          <div id="title" class="">Die Mülltonnen rausäumen</div>
+          <div id="type" class="">d</div>
+          <div id="created-at" class="">d</div>
+          <div id="created-on" class="">d</div>
+          <div id="finished-at" class="">d</div>
+          <div id="finished-on" class=""></div>
+          <div id="deadline" class=""></div>
+        </div>
+        <div id="template-task">
+          <div id="title" class="">Die Mülltonnen rausäumen</div>
+          <div id="type" class="">d</div>
+          <div id="created-at" class="">d</div>
+          <div id="created-on" class="">d</div>
+          <div id="finished-at" class="">d</div>
+          <div id="finished-on" class=""></div>
+          <div id="deadline" class=""></div>
+        </div>
+        
+      </div>
+
+      <div id="calendar-board" class="block-with-position-mark"></div>
+      <div id="position-mark-calendar" class="position-mark">
+        <img id="position-mark-calendar-up" class="arrow-up hidden" src="pfeil rechts.svg" talt="Beschreibung" width="12px" height="12px">
+        <img id="position-mark-calendar-down" class="arrow-down " src="pfeil rechts.svg" alt="Beschreibung" width="12px" height="12px">
+      </div> 
+    
+    </div>
+
+    <nav id="navigation-bar-calendar" class="navigation-bar">
+      <div id="navigator-bar-calendar-left">
+        <button id="today" class="little-square-button">T</button>
+        <button id="day-back" class="little-square-button">&#9664;</button>
+        <button id="day-forward" class="little-square-button">&#9654;</button>
+      </div>
+      
+      <span id="date-of-today" onclick="">Test-Datum</span>
+
+      <div id="navigation-bar-calendar-right">
+        <button id="task-history" class="little-square-button">H</button>
+      </div>
+    </nav>
+
+    <div id="hub-container" class="block">
+      <div id="search-resultes" class="hidden block-with-position-mark"></div>
+      <div id="preview-of-graph-view" class="hidden block-with-position-mark"></div>
+      <div id="preview-of-list" class="hidden block-with-position-mark"></div>
+      <div id="preview-of-task" class="hidden block-with-position-mark"></div>
+      <textarea id="hub" class="block-with-position-mark"></textarea>
+      <div id="position-mark-hub" class="position-mark">
+        <img id="position-mark-hub-up" class="arrow-up" src="pfeil rechts.svg" talt="Beschreibung" width="12px" height="12px">
+        <img id="position-mark-hub-down" class="arrow-down hidden" src="pfeil rechts.svg" alt="Beschreibung" width="12px" height="12px">
+      </div>
+    </div>
+
+  </div>
+
+  <div id="page3" class="page">
+    <div id="graph-view" class="block"><h1>graph-view</h1></div>  
+    <nav id="navigation-bar-graph-view" class="navigation-bar">
+      <div class="graph-view-titles-container"> Test Test</div>
+      <div class="graph-view-titles-container"> Test2 Test2</div>
+    </nav>
+  </div>
+
+  <div id="settings" class="page">
+    <div id="color-coding-of-calendar" class="block"><h1>color-coding</h1></div>
+    <div id="color-coding-of-graph-view" class="block"><h1>color-coding</h1></div>
+  </div>
+  
+</div>
+
+
+
+</body>
+</html>
+
+<!-- 
+- template-tasks aufbauen
+- keyboard-suchleisten zusammenspiel
+- Einrastverhalten definerien
+nav leiste graph view noch ausbauen
+danach wäre die Datenbank sinnvoll
+danach die logik für das Hub
+von den eingaben im hub werden dann einträge in der datenbank vorgenommen und diese werden dann angezeigt
+-->

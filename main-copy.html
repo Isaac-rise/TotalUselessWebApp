@@ -1,0 +1,290 @@
+
+<!-- region Planung-->
+<!--
+
+Seiten:
+1. Seite (Hub, Statistiks, Listen) 
+2. Seite (Lagerhinzufügen, Lagerübersicht)
+3. Seite (eins zu eins Kopie Blog, welche dann immer mit der online Version geupdatet wird)
+
+weitere UI-Elemente:
+1. conflict managment Fenster (wenn beim synchronisieren ein conflict enstanden ist, bei welchem ich zwischen beiden möglichen Zuständen wählen muss um ein Element zu syncen)
+
+syncing:
+
+Blogfreigabe für bestimmte Listen erteilen können:
+-->
+<!-- endregion -->
+
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <link rel="stylesheet" href="/style-copy.css">
+  <link rel="icon" href="icon.png" type="image/png">
+  <link rel="manifest" href="manifest.json">
+  
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Meine WebApp">
+</head>
+
+<body>
+  <!-- #region over all pages -->
+  <div id="search-bar">
+    <input id="search" type="search">
+  </div>
+  <!-- endregion -->
+
+<div class="viewport-container">
+  
+  <div id="pages">
+
+  <!-- #region Page 1 -->
+    <div id="page1" class="page">
+
+      <div id="list-block" class="list-element scroll-container">
+        
+        <!-- possition mark -->
+        <div id="position-mark-lists" class="position-mark">
+          <img id="position-mark-lists-up" class="arrow-up hidden" src="pfeil rechts.svg" alt="Beschreibung" width="12px" height="12px">
+          <img id="position-mark-lists-down" class="arrow-down " src="pfeil rechts.svg" alt="Beschreibung" width="12px" height="12px">
+        </div>
+
+        <!-- Überschrift -->
+        <div style=" display: flex; justify-content: center;">
+          <div style="height: 40px;font-size: 35px;">Lists</div>
+        </div>
+
+        <!--Rahmen-->
+        <div style="display: flex; flex-direction: column;overflow-y: scroll;height: inherit;border: 1px solid; box-sizing: border-box;height: calc(100% - 40px);">
+          <!-- Container für beiden Listen-Container -->
+          <div style="display: flex;flex-direction: row; --gap-list: 15px; gap: var(--gap-list) ; width: 100%; height: inherit;" class="scroll-container">
+            <!-- Container für die Listentitel -->
+            <div id="structure-content-1" style="min-width: auto; width: calc((100% - var(--gap-list)) / 2); display: flex; flex-direction: column;flex-shrink: 0; box-sizing: border-box;">
+              <!-- Container für die Listen-container -->
+              <span id="list-content-template" style="margin:1mm; color: none;"></span>
+            </div>
+            <div id="structure-content-2" style=" min-width: auto;width: calc((100% - var(--gap-list)) / 2); display: flex; flex-direction: column;flex-shrink: 0; box-sizing: border-box;">
+            </div>
+            
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  <!-- endregion -->
+
+  <!-- #region Page 2 -->
+    <div id="page2" class="page">
+      
+      <div id="calendar-container" class="block">
+        
+        <div id="task-board" class="block-with-position-mark scroll-container">
+
+          <div class="template-task">
+            <span class="title-with-deadline">1Die Mülltonnen rausäumen Die fsd fsdfadf dfdf sdf  </span>
+            <div  class="deadline">14:22</div>
+          </div>
+
+          <div class="template-task">
+            <span class="title-without-deadline">1Die Mülltonnen rausäumen Die fsd fsdfasdfsadfsad asdfasdfsda adsfdf dsadf</span>
+          </div>
+          
+
+        </div>
+
+        <div id="position-mark-calendar" class="position-mark">
+          <img id="position-mark-calendar-up" class="arrow-up hidden" src="pfeil rechts.svg" talt="Beschreibung" width="12px" height="12px">
+          <img id="position-mark-calendar-down" class="arrow-down " src="pfeil rechts.svg" alt="Beschreibung" width="12px" height="12px">
+        </div> 
+
+        <div id="calendar-board" class="block-with-position-mark"></div>
+      
+      </div>
+
+      <nav id="navigation-bar-calendar" class="navigation-bar">
+        <div id="navigator-bar-calendar-left">
+          <button id="today" class="little-square-button">T</button>
+          <button id="day-back" class="little-square-button">&#9664;</button>
+          <button id="day-forward" class="little-square-button">&#9654;</button>
+        </div>
+        
+        <span id="date-of-today" onclick="">Test-Datum</span>
+
+        <div id="navigation-bar-calendar-right">
+          <button id="task-history" class="little-square-button">H</button>
+        </div>
+      </nav>
+
+      <div id="hub-container" class="block">
+        <div id="search-resultes" class="hidden block-with-position-mark"></div>
+        <div id="preview-of-graph-view" class="hidden block-with-position-mark"></div>
+        <div id="preview-of-list" class="hidden block-with-position-mark"></div>
+        <div id="preview-of-task" class="hidden block-with-position-mark"></div>
+        <div contenteditable="true" id="hub" class="block-with-position-mark">
+          <div style="color: blue; line-height: 100%; font-size: 16px; background-color: green;">Test</div>
+          <p style="background-color: yellow; margin: 0px;">&nbsp;</p>
+          <div style="color: blue">Test</div>
+        </div>
+        <div id="position-mark-hub" class="position-mark">
+          <img id="position-mark-hub-up" class="arrow-up" src="pfeil rechts.svg" talt="Beschreibung" width="12px" height="12px">
+          <img id="position-mark-hub-down" class="arrow-down hidden" src="pfeil rechts.svg" alt="Beschreibung" width="12px" height="12px">
+        </div>
+      </div>
+
+    </div>
+
+  <!-- endregion -->
+
+  <!-- #region Page 3 -->
+
+    <div id="page3" class="page">
+      <div id="graph-view" class="block"><h1>graph-view</h1></div>  
+      <nav id="navigation-bar-graph-view" class="navigation-bar">
+        <div class="graph-view-titles-container"> Test Test</div>
+        <div class="graph-view-titles-container"> Test2 Test2</div>
+      </nav>
+    </div>
+
+  <!-- endregion -->
+
+  <!-- #region Setting -->
+    <div id="settings" class="page">
+
+      <details>
+        <summary style="list-style: none;"> 
+        <div id="color-coding-of-calendar">
+          
+          <div style="display: flex; flex-direction: column;width: 100%;height: auto; background-color: green">
+            
+            <div style="height: 10%; align-content: center; text-align: center;"> 
+              Calendar colors
+            </div>
+            
+          </div>
+        </div>
+        </summary>
+
+          <div style="display: flex; flex-direction: row; width: 100%; gap: 15px ; background-color: blue">
+              
+            <div class="table-color-coding">
+
+              <div class="object">
+                <div class="title-with-deadline">importent tasks</div>
+                <span class="color-picker" onclick=""></span>
+              </div>
+              
+              <div class="object">
+                <div class="title-with-deadline">importent tasks</div>
+                <span class="color-picker" onclick=""></span>
+              </div>
+
+              <div class="object">
+                <div class="title-with-deadline">importent tasks</div>
+                <span class="color-picker" onclick=""></span>
+              </div>
+
+              <div class="object">
+                <div class="title-with-deadline">general tasks</div>
+                <span class="color-picker" onclick=""></span>
+              </div>
+
+              <div class="object">
+                <div class="title-with-deadline">habit</div>
+                <span class="color-picker" onclick=""></span>
+              </div>
+            </div>
+
+            
+          </div> 
+
+      </details>
+      <details>
+        <summary style="list-style: none;">
+          <div id="color-coding-of-calendar">
+        
+            <div style="display: flex; flex-direction: column;width: 100%;height: auto; background-color: green">
+              <div style="height: 10%; align-content: center; text-align: center;"> 
+                Hub Terms
+              </div>
+                
+            </div>
+          </div>
+        </summary>
+
+        <div style="display: flex; flex-direction: row; width: 100%; gap: 15px ; background-color: blue">
+                  
+                  <div class="table-color-coding">
+
+                    <div class="object">
+                      <div class="title-with-deadline">importent tasks</div>
+                      <span class="color-picker" onclick=""></span>
+                    </div>
+                    
+                    <div class="object">
+                      <div class="title-with-deadline">importent tasks</div>
+                      <span class="color-picker" onclick=""></span>
+                    </div>
+
+                    <div class="object">
+                      <div class="title-with-deadline">importent tasks</div>
+                      <span class="color-picker" onclick=""></span>
+                    </div>
+
+                    <div class="object">
+                      <div class="title-with-deadline">general tasks</div>
+                      <span class="color-picker" onclick=""></span>
+                    </div>
+
+                    <div class="object">
+                      <div class="title-with-deadline">habit</div>
+                      <span class="color-picker" onclick=""></span>
+                    </div>
+                  </div>
+                  
+        </div>
+      </details>
+      
+      <!---
+      <div class="table-color-coding"></div>
+        <div id="color-coding-of-graph" class="block"><h1>Graph colors</h1>
+          <div class="object">
+            <div class="title-with-deadline">importent tasks</div>
+            <span class="color-picker" onclick=""></span>
+          </div>
+          <div class="object">
+            <div class="title-with-deadline">general tasks</div>
+            <span class="color-picker" onclick=""></span>
+          </div>
+          <div class="object">
+            <div class="title-with-deadline">importent tasks</div>
+            <span class="color-picker" onclick=""></span>
+          </div>
+        </div>
+      </div>
+      -->
+    </div>
+
+
+  <!-- endregion -->
+
+  </div>
+</div>
+
+<script src="/logik.js"></script>
+</body>
+</html>
+
+<!-- 
+- zuletzt die Höhe des Listen Moduls automatisch regeln und auch den gap zwischen den anderen Modulen und dem hier automatisch regeln
+- template-tasks aufbauen
+- keyboard-suchleisten zusammenspiel
+- Einrastverhalten definerien
+nav leiste graph view noch ausbauen
+danach wäre die Datenbank sinnvoll
+danach die logik für das Hub
+von den eingaben im hub werden dann einträge in der datenbank vorgenommen und diese werden dann angezeigt
+-->
