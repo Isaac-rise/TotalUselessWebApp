@@ -109,7 +109,7 @@ window.addEventListener('touchend', (event) => {
     console.log(endPosition.changedTouches[0].pageX)
 
     //wenn ein Ende erkannt wurde die Geste in ein Event umwandeln
-    if (Math.sqrt(((startPosition.touches[0].pageX - endPosition.changedTouches[0].pageX) ** 2) + ((startPosition.touches[0].pageY - endPosition.changedTouches[0].pageY) ** 2)) / (endPosition.timeStamp - startPosition.timeStamp) > 0.6) {
+    if (Math.sqrt(((startPosition.touches[0].pageX - endPosition.changedTouches[0].pageX) ** 2) + ((startPosition.touches[0].pageY - endPosition.changedTouches[0].pageY) ** 2)) / (endPosition.timeStamp - startPosition.timeStamp) > 0.7) {
         if (startPosition.touches[0].pageX < endPosition.changedTouches[0].pageX) {
             //Seite wird nach Links gewechselt
             if (currentPage > 0) {
@@ -119,7 +119,7 @@ window.addEventListener('touchend', (event) => {
 
         } else if (startPosition.touches[0].pageX > endPosition.changedTouches[0].pageX) {
             //Seite wird nach Rechts gewechselt
-            if (currentPage < 4) {
+            if (currentPage < 3) {
                 moveToPage(currentPage + 1)
                 console.log(currentPage)
             }

@@ -71,7 +71,7 @@ span {
   flex-direction: row;
   justify-content: flex-start;
   overflow: hidden;
-  transition: transform 0.3s ease;
+  transition: transform 0.05s;
 }
 
 .page {
