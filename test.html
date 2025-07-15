@@ -4,42 +4,14 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   
-
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
 </head>
 
-<body>
-  <div style="display:flex; background-color: blue; height: 50vh; width: 25%; --gap-page: 5%; gap: var(--gap-page);--count-pages: 4; flex-direction: column; justify-content: flex-start; --part-container-height: calc((50vh - var(--gap-page) * 3)  / var(--count-pages))">
-    <div style="background-color: green; min-height: var(--part-container-height);max-height: var(--part-container-height);">
-      <div style=" background-color: darkgoldenrod; height: 15%;text-align: center; color: white">Text</div>
-      <div style="display: flex; flex-direction: row; background-color: yellow; height: 85%; gap: 5%;">
-
-        <div style="display: flex; flex-direction: column; width: 47.5%; height: 100%; background-color: purple; color: white; --gap-line-container: 5px; gap: var(--gap-line-container)">
-          <div style="display: column;"> 
-            <span>Test Test Test Test Test</span>
-          </div>
-        </div>
-
-        <div style="display: flex; flex-direction: column; width: 47.5%; background-color: purple; color: white; --gap-line-container: 5px; gap: var(--gap-line-container)">
-          <span>Test Test Test Test Test</span>
-        </div>
-
-      </div>
-    </div>
-    <div style="background-color: red; min-height: calc((50vh - var(--gap-page) * 3)  /  var(--count-pages))"></div>
-    <div style="background-color: green; min-height: calc((50vh - var(--gap-page) * 3)  /  var(--count-pages))"></div>
-    <div style="background-color: red; min-height: calc((50vh - var(--gap-page) * 3)  /  var(--count-pages))"></div>
-
-  </div>
+<body style="height: 100vh; overflow: hidden; display: flex; flex-direction: column; gap: calc(100vh / 5);">
+  <div style="min-height: 10%; background-color: blue;">Test</div>
+  <div style="min-height: 10%; background-color: green;">Test</div>
+  <div style="min-height: 10%; background-color: yellow;">Test</div>
+  <div contenteditable="true" style="min-height: 10%;">Test</div>
 </body>
 </html>
-
-<!-- 
-- zuletzt die Höhe des Listen Moduls automatisch regeln und auch den gap zwischen den anderen Modulen und dem hier automatisch regeln
-- template-tasks aufbauen
-- keyboard-suchleisten zusammenspiel
-- Einrastverhalten definerien
-nav leiste graph view noch ausbauen
-danach wäre die Datenbank sinnvoll
-danach die logik für das Hub
-von den eingaben im hub werden dann einträge in der datenbank vorgenommen und diese werden dann angezeigt
--->

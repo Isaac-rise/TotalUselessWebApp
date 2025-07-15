@@ -27,7 +27,7 @@ function generateShortId(length = 15) {
 
 // #region Database
 const dbName = "Web-App";
-const dbVersion = 7;
+const dbVersion = ;
 
 let db;
 
@@ -36,24 +36,56 @@ const request = indexedDB.open(dbName, dbVersion);
 request.onupgradeneeded = function (event) {
   db = event.target.result;
   
-   if (!db.objectStoreNames.contains("tasks")) {
-    db.createObjectStore("tasks", { keyPath: "id"});
+    if (!db.objectStoreNames.contains("graph-view")) {
+    db.createObjectStore("graph-view", { keyPath: "id"});
+  }
+
+  if (!db.objectStoreNames.contains("graph-view")) {
+    db.createObjectStore("graph-view", { keyPath: "id"});
   }
 };
+
+//Index
+
+
 //#endregion
 
-// #region Inhalte in Task einfügen 
-function insert_task (title = "",deadline = "") {
+// #region Inhalte DB einfügen
+
+/*
+    Ich möchte bei den Tasks zunächst nach aktiv und inaktiv unterscheiden. Die aktiven möchte ich absteigend sortieren nach
+    
+    - mit dem "important" - tag markiert
+    - Termine nach Urzeit markiert
+    - (fällig, überfällig) (regelmäßige Aufgaben, habits) - zunächst nach diese nach kategorien 
+    - die nächste Aufgabe von jedem Projekt
+
+    - unkategorisierte Aufgaben
+    - habits, termine, random-tasks, nächste Projekt schritte, regelmäßige Aufgaben, Erinnerungen, 
+
+*/
+
+// Tasks
+function insert_task (title = "",deadline = "",type = "") {
     const tx = db.transaction("tasks", "readwrite");
     const store = tx.objectStore("tasks");
 
     const newTask = {
         id: generateShortId(),
         title: title,
-        deadline: deadline
+        deadline: deadline,
+        type: type,
+        status: active
+
     };
     store.add(newTask);
 }
+
+// in finished Tasks bewegen
+
+// graph view
+
+// 
 //#endregion
 
 // #region Task in DB schreiben
@@ -126,6 +158,33 @@ window.addEventListener('touchend', (event) => {
         }
     } 
 });
+
+//scrollverhalten beim öffnen der Tastatur steuern
+const height = window.getComputedStyle(document.querySelector('.page')).height;
+const innerHeight = window.innerHeight
+let letzteGemerkteHöhe;
+
+
+
+window.addEventListener('resize', () => {
+  if (window.innerHeight < height) {
+    // Tastatur vermutlich geschlossen
+    letzteGemerkteHöhe = window.innerHeight;
+    const differenceNewHeight = letzteGemerkteHöhe / (innerHeight / 100 )
+    document.querySelector('.pages').style.height = `calc(${height} - ${differenceNewHeight}%`;
+  }
+});
+
+window.addEventListener('resize', () => {
+  if (window.innerHeight > letzteGemerkteHöhe) {
+    // Tastatur vermutlich geschlossen
+    //*document.body.style.overflow = 'hidden';
+    
+    document.querySelector('.pages').style.height = `100%`;
+  }
+});
+
+
 }
 
 
@@ -138,7 +197,9 @@ if (Math.sqrt(((startPostion.pageX - endPositon.pageX) ** 2) + ((startPostion.pa
 
 // #endregion
 
-/*
+
+
+/*k
 Im Hub werden immer die Zeilen angezeigt welche noch nicht verarbeitet werden sollten, diese werden in einer Tabelle gespeichert
 Wenn wenn ich dann etwas hineinschreibe, wird es in der DB gespeichert, vorher wird es verarbeitet so das 
 */
