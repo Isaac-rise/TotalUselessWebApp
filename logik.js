@@ -27,7 +27,7 @@ function generateShortId(length = 15) {
 
 // #region Database
 const dbName = "Web-App";
-const dbVersion = ;
+const dbVersion = 11;
 
 let db;
 
@@ -36,13 +36,13 @@ const request = indexedDB.open(dbName, dbVersion);
 request.onupgradeneeded = function (event) {
   db = event.target.result;
   
-    if (!db.objectStoreNames.contains("graph-view")) {
-    db.createObjectStore("graph-view", { keyPath: "id"});
-  }
+    if (!db.objectStoreNames.contains("habits")) {
+    db.createObjectStore("habits", { keyPath: "id"});
+    }
 
-  if (!db.objectStoreNames.contains("graph-view")) {
-    db.createObjectStore("graph-view", { keyPath: "id"});
-  }
+    if (!db.objectStoreNames.contains("repeating-tasks")) {
+        db.createObjectStore("repeating-tasks", { keyPath: "id"});
+    }
 };
 
 //Index
