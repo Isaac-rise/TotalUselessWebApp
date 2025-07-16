@@ -82,8 +82,7 @@ span {
   max-width: calc(393px - (var(--margin-page) * 2));
   height: calc(680px - (var(--margin-page) * 2));
   */
-  max-width: 393px;
-  height: 680px;
+  height: 90%;
   border-top-left-radius: 5px; 
   border-top-right-radius: 5px; 
   display: flex;
@@ -93,6 +92,7 @@ span {
   overflow: hidden;
   flex: 0 0 100vw;
   transition: 0.01s ease;
+  background-color: black;
 }
 
 .block{ 
@@ -102,15 +102,7 @@ span {
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
-}
-
-.block-with-position-mark {
-  width: calc(100% - 12px);
-  max-width: calc(100% - 12px);
-  font-size: var(--small-font-size);
-  display: flex;
-  flex-direction: column;
-  box-sizing: border-box;
+  padding: 2mm;
 }
 
 .scroll-container::-webkit-scrollbar { /*versteckt die scrollbar*/
@@ -123,7 +115,7 @@ span {
 
 #search-bar {
   width: 393px;
-  height: 75px;
+  height: 10%;
   bottom: 0px;
   background-color: grey;
   position: fixed;
@@ -154,17 +146,19 @@ span {
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
+  padding: 2mm;
   padding-left: 3mm;
   padding-right: 3mm;
   height: 5%;
 }
 
-.position-mark {
+.information-bar {
   width: 5%;
-  position: absolute;
   display: flex;
   z-index: 9999;
-
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 /* endregion */
 
@@ -212,17 +206,19 @@ span {
 */
 
 #hub-container {
-  position: relative;
-  height: 50%;
-  /*
-  border-left: 1px solid black;
-  border-right: 1px solid black;
-  border-bottom: 1px solid black;
-  */
+  min-height: 47.5%;
+  width: 100%;
   border-radius: 5px; 
+  display: flex;
+  flex-direction: row;
+  padding-right: 0mm;
+  background-color: white;
+  border-top-left-radius: 2mm;
+  border-top-right-radius: 2mm;
 }
 
 #hub {
+  width: 100%;
   height: 100%;
   font-size: var(--small-font-size);
   line-height: normal;
@@ -233,36 +229,40 @@ span {
   border: none;
   display: flex;
   flex-direction: column-reverse;
-  gap: 5px;
+  gap: 10px;
   overflow-y: scroll;
   position: relative;
-  margin: 5px;
 }
 
-#position-mark-hub {
-  height: 3mm;
-  top: 0;
-  right: 0;
-  margin-top: 1mm;
+#newBlock {
+  min-height: 50%; 
+  line-height: 100%; 
+  font-size: 16px; 
+  border-radius: 2mm; 
+  padding: 5px; 
+  border: 1px solid grey;
 }
 
-#position-mark-calendar {
-  width: 12px;
-  height: 12px;
-  top: 0;
-  right: 0;
-  margin-top: 1mm;
-  margin-right: 1mm;
-
+#template-ex-block-in-hub {
+  line-height: 100%; 
+  font-size: 16px; 
+  border-radius: 2mm; 
+  padding: 5px; 
+  border: 1px solid grey;
 }
 
-#navigation-bar-calendar {
+#navigation-bar-tasks {
   display: flex;
   justify-content: space-between; /* verteilt die Knoten */
   align-items: center;
-  border: 1px solid black;
+  border: 3px solid black;
+  border-left: 3px solid black;
+  border-right: 3px solid black;
   border-bottom-color: black; 
   border-top-color: black; 
+  background-color: white;
+  margin-left: 5px;
+  margin-right: 5px;
 }
 
 #navigator-bar-calendar-left {
@@ -271,36 +271,24 @@ span {
   gap: 4mm;
 }
 
-#navigation-bar-calendar-right {
-  display: flex;
-  justify-content: flex-end;
-}
 
-#calendar-container {
-  position: relative;
-  padding: 1%;
-  padding-left:3mm;
-  height: 49%;
+#tasks-container {
+  min-height: 47.5%;
   width: 100%;
-  max-width: 100%;
-  /*
-  border-left: 1px solid black;
-  border-right: 1px solid black;
-  border-top: 1px solid black;
-  */
+  min-width: 100%;
   border-radius: 5px; 
-  border-bottom-left-radius: 5px; 
-  border-bottom-right-radius: 5px; 
+  overflow-y: scroll;
+  box-sizing: border-box;
   display: flex;
   flex-direction: row;
-  overflow-y: auto;
-  box-sizing: border-box;
-  
+  padding-right: 0mm;
+  background-color: white;
+  border-bottom-left-radius: 2mm;
+  border-bottom-right-radius: 2mm;
 }
 
 #task-board {
-  width: calc(100% - 3mm);
-  max-width: calc(100% - 4mm);
+  width: 100%;
   height: 100%;
   overflow-y: auto;
   flex-shrink: 0;
@@ -330,29 +318,31 @@ span {
   gap: 3mm;
 }
 
-.title-without-deadline {
+.title-without-add-on {
   width: 100%;
 }
 
-.title-with-deadline {
+.title-with-add-on {
   width: 90%;
 }
 
-.deadline {
+.add-on {
   width: 10%;
 }
 
 
-
 #date-of-today {
   position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
+  right: 5%;
 }
 
 .little-square-button {
-  width: 6mm;
-  height: 6mm;}
+  width: 25px;
+  height: 25px;
+  border-radius: 2px;
+  border: 1px solid black;
+  background-color: white;
+}
 
 #template-task-1 {
   height: 9.99%;

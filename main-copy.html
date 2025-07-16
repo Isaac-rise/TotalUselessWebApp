@@ -80,64 +80,62 @@ Blogfreigabe für bestimmte Listen erteilen können:
   <!-- #region Page 2 -->
     <div id="page2" class="page">
       
-      <div id="calendar-container" class="block">
+      <div id="tasks-container" class="block">
         
-        <div id="task-board" class="block-with-position-mark scroll-container">
+        <div style="width: 95%">
+          <div id="task-board" class="scroll-container">
 
-          <div class="template-task">
-            <span class="title-with-deadline">1Die Mülltonnen rausäumen Die fsd fsdfadf dfdf sdf  </span>
-            <div  class="deadline">14:22</div>
+            <div id="template-task-with-add-on" class="template-task">
+              <span class="title-with-add-on" "></span>
+              <div  class="add-on"></div>
+            </div>
+
+            <div id="template-task-without-add-on" class="template-task">
+              <span class="title-with-add-on" "></span>
+              <div  class="add-on"></div>
+            </div>
+
           </div>
 
-          <div class="template-task">
-            <span class="title-without-deadline">1Die Mülltonnen rausäumen Die fsd fsdfasdfsadfsad asdfasdfsda adsfdf dsadf</span>
-          </div>
-          
-
+          <div id="calendar-board"></div>
         </div>
 
-        <div id="position-mark-calendar" class="position-mark">
+        <div id="information-bar-tasks" class="information-bar">
           <img id="position-mark-calendar-up" class="arrow-up hidden" src="pfeil rechts.svg" talt="Beschreibung" width="12px" height="12px">
           <img id="position-mark-calendar-down" class="arrow-down " src="pfeil rechts.svg" alt="Beschreibung" width="12px" height="12px">
-        </div> 
-
-        <div id="calendar-board" class="block-with-position-mark"></div>
-      
+          </div> 
       </div>
 
-      <nav id="navigation-bar-calendar" class="navigation-bar">
+      <nav id="navigation-bar-tasks" class="navigation-bar">
         <div id="navigator-bar-calendar-left">
           <button id="today" class="little-square-button">T</button>
           <button id="day-back" class="little-square-button">&#9664;</button>
           <button id="day-forward" class="little-square-button">&#9654;</button>
+          <button id="insertExBlock" class="little-square-button">EX</button>
+          <button id="task-history" class="little-square-button">H</button>
         </div>
         
         <span id="date-of-today" onclick="">Test-Datum</span>
 
-        <div id="navigation-bar-calendar-right">
-          <button id="task-history" class="little-square-button">H</button>
-        </div>
       </nav>
 
       <div id="hub-container" class="block">
-        <div id="preview" class="hidden block-with-position-mark"></div>
-        <div id="hub" class="scroll-container" contenteditable="true" class="block-with-position-mark">
-          <div id="newBlock" style="min-height: 50%; color: blue; line-height: 100%; font-size: 16px; background-color: grey;">newBlock</div>
-          <div style="color: blue; line-height: 100%; font-size: 16px; background-color: green;">Test</div>
-          <div style="background-color: blue">Test</div>
-          <div style="background-color: blue">Test</div>
-          <div style="background-color: blue">Test</div>
-          <div style="background-color: blue">Test</div>
-          <div style="background-color: blue">Test</div>
-          <div style="background-color: blue">Test</div>
+          <div style="width: 95%; display: flex; flex-direction: column-reverse;;">
+            
+            <div id="preview" class="hidden"></div>
+
+            <div id="hub" class="scroll-container" contenteditable="true">
+              <div id="newBlock" >newBlock</div>
+              <div id="template-ex-block-in-hub">Test</div>
+            </div>
+
+          </div>
           
-          
-        
-        </div>
-        <div id="position-mark-hub" class="position-mark">
+        <div id="information-bar-hub"  class="information-bar">
           <img id="position-mark-hub-up" class="arrow-up" src="pfeil rechts.svg" talt="Beschreibung" width="12px" height="12px">
           <img id="position-mark-hub-down" class="arrow-down hidden" src="pfeil rechts.svg" alt="Beschreibung" width="12px" height="12px">
         </div>
+
       </div>
 
     </div>
