@@ -149,7 +149,7 @@ span {
   padding: 2mm;
   padding-left: 3mm;
   padding-right: 3mm;
-  height: 5%;
+  height: 6%;
 }
 
 .information-bar {
@@ -206,7 +206,7 @@ span {
 */
 
 #hub-container {
-  min-height: 47.5%;
+  min-height: 47%;
   width: 100%;
   border-radius: 5px; 
   display: flex;
@@ -228,7 +228,8 @@ span {
   outline: none;
   border: none;
   display: flex;
-  flex-direction: column-reverse;
+  flex-direction: column;
+  justify-content: flex-end;
   gap: 10px;
   overflow-y: scroll;
   position: relative;
@@ -255,14 +256,14 @@ span {
   display: flex;
   justify-content: space-between; /* verteilt die Knoten */
   align-items: center;
-  border: 3px solid black;
+  border: 5px solid black;
   border-left: 3px solid black;
   border-right: 3px solid black;
-  border-bottom-color: black; 
-  border-top-color: black; 
   background-color: white;
   margin-left: 5px;
   margin-right: 5px;
+  background-color: white;
+  box-sizing: border-box;
 }
 
 #navigator-bar-calendar-left {
@@ -273,7 +274,7 @@ span {
 
 
 #tasks-container {
-  min-height: 47.5%;
+  min-height: 47%;
   width: 100%;
   min-width: 100%;
   border-radius: 5px; 
