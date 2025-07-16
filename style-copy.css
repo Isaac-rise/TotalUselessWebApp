@@ -231,7 +231,12 @@ span {
   resize: none;
   outline: none;
   border: none;
+  display: flex;
+  flex-direction: column-reverse;
+  gap: 5px;
+  overflow-y: scroll;
   position: relative;
+  margin: 5px;
 }
 
 #position-mark-hub {

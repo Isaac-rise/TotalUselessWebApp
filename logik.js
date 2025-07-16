@@ -75,7 +75,7 @@ function insert_task (title = "",deadline = "",type = "") {
         title: title,
         deadline: deadline,
         type: type,
-        status: active
+        status: "active"
 
     };
     store.add(newTask);
@@ -96,13 +96,27 @@ request.onsuccess = function (event) {
 // #endregion
 
 // #region Listener Hub
+/*
+1. Ich möchte im Hubbereich einen ex-container anklicken und diesen weiter bearbeiten oder einen neuen Auftrag schreiben und dafür den leeren Container auswählen
+    1.1 wenn ich einen container bearbeite möchte ich das im Nachhinein der Inhalt den Eintrag in der DB updatet
+    1.2 wenn ich den leeren Bereich anwähle möchte ich das bei verlassen der Container verarbeitet wird
+        1.2.1 wenn der container ein ex container wird, soll der Inhalt in die DB geschrieben werden und dann ein entsprechender container geformt und in das Hub eingefügt werden
+              hierbei soll der Term und der Titel ensprechend eingefärbt werden
+        1.2.2 wenn der container kein ex container ist soll er entsprechend verarbeitet werden
+            1.2.1 dafür soll zunächst der Term erfasst werden 
+            1.2.2 dann soll das entsprechende Datenformat gefunden werden und nach diesem sollen dann die Attribute des Objektes bestimmt werden
+            1.2.3 das Objekt soll dann mit weiteren automatisch erstellten Inhalten in der db erfasst werden 
+*/
+
 const hubField = document.getElementById("hub");
 
 hubField.addEventListener("input", () => {
   const text = hubField.value;
-  console.log("Eingabe:", text);
-  // Hier kannst du den Text z. B. in IndexedDB speichern
+  
+  // text scannen
+
 });
+
 // #endregion
 
 // #region coloring hub
@@ -135,13 +149,16 @@ window.addEventListener('touchstart', (event) => {
 //entpunkt einer Geste abfangen
 window.addEventListener('touchend', (event) => {
     endPosition = event;
-    console.log(`test1`)
-    console.log(Math.sqrt(((startPosition.touches[0].pageX - endPosition.changedTouches[0].pageX) ** 2) + ((startPosition.touches[0].pageY - endPosition.changedTouches[0].pageY) ** 2)) / (endPosition.timeStamp - startPosition.timeStamp))
-    console.log(startPosition.touches[0].pageX)
-    console.log(endPosition.changedTouches[0].pageX)
+
+    const differenceX = startPosition.touches[0].pageX - endPosition.changedTouches[0].pageX
+    const differenceY = startPosition.touches[0].pageY - endPosition.changedTouches[0].pageY
+    const exeleration = Math.sqrt(differenceX ** 2 + differenceY ** 2) / (endPosition.timeStamp - startPosition.timeStamp);
+    const maxAngle = 20; 
+    const minExel = 0.6;
+    const angle =  Math.atan((differenceY / differenceX)) * (180 / Math.PI);
 
     //wenn ein Ende erkannt wurde die Geste in ein Event umwandeln
-    if (Math.sqrt(((startPosition.touches[0].pageX - endPosition.changedTouches[0].pageX) ** 2) + ((startPosition.touches[0].pageY - endPosition.changedTouches[0].pageY) ** 2)) / (endPosition.timeStamp - startPosition.timeStamp) > 0.7) {
+    if (exeleration > minExel && angle < maxAngle && angle > -1 * maxAngle) {
         if (startPosition.touches[0].pageX < endPosition.changedTouches[0].pageX) {
             //Seite wird nach Links gewechselt
             if (currentPage > 0) {
