@@ -208,7 +208,6 @@ span {
 #hub-container {
   min-height: 47%;
   width: 100%;
-  border-radius: 5px; 
   display: flex;
   flex-direction: row;
   padding-right: 0mm;
@@ -242,6 +241,18 @@ span {
   border-radius: 2mm; 
   padding: 5px; 
   border: 1px solid grey;
+}
+
+#date-picker {
+  width: 100%;
+  height: 100%;
+  background-color: green;
+}
+
+#preview{
+  width: 100%;
+  height: 100%;
+  display: none;
 }
 
 #template-ex-block-in-hub {
@@ -301,6 +312,7 @@ span {
   box-sizing: border-box;
 }
 
+
 .template-task {
   font-size: 14px;
   height: auto;
@@ -332,7 +344,7 @@ span {
 }
 
 
-#date-of-today {
+#currentDate {
   position: absolute;
   right: 5%;
 }
@@ -371,11 +383,6 @@ span {
 
 #preview-of-graph-view {
   height: 50%;
-}
-
-#datepicker-popup input[type="date"],
-#datepicker-popup button {
-  font-size: var(--small-font-size);
 }
 
 /* #endregion */

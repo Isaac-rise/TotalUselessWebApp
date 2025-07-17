@@ -1,3 +1,76 @@
+// #region Archiv
+//localStorage.setItem("choosenDate",dateToday.toISOString()); //speichert das dateObjekt von heute im lokalen Speicher
+
+// #endregion
+
+// #region basic settings
+// date
+let dateToday     = new Date();
+let choosenDate     = new Date();
+let day_clicks      = 0;
+let click_marker    = 0;
+
+//um 00:00 soll das 
+
+function generateDateAsStr (dateObject) {
+    let day   = String(dateObject.getDate()).padStart(2, '0');
+    let month = String(dateObject.getMonth() + 1).padStart(2, '0'); // Achtung: Monate starten bei 0
+    let year  = dateObject.getFullYear();
+    let formatedDate = `${day}.${month}.${year}`;
+
+    return formatedDate;
+}
+
+function changeCurrentDate (date) {
+    document.getElementById("currentDate").textContent = date;
+}
+
+function changeDateDay () {
+    if (click_marker === 0) {
+        click_marker = 1;
+        setTimeout(() => {
+            if (day_clicks != 0) {
+            changeCurrentDate(generateDateAsStr(new Date(choosenDate.setDate(choosenDate.getDate() + day_clicks)))); // day_clicks nehmen und diese Tage auf aktuelles Datum addieren und Datum wechseln
+            day_clicks = 0;
+            click_marker = 0;
+        }}, 31);
+    }
+}
+
+changeCurrentDate(generateDateAsStr(dateToday)); //setzt immer beim neustarten der app das heutige Datum
+
+// #endregion
+
+// #region button controlling
+
+document.getElementById("today").addEventListener("click", () => {
+    changeCurrentDate(generateDateAsStr(dateToday)); //heutiges Datum anzeigen
+    choosenDate = new Date()
+    // heutige Tasks anzeigen
+});
+
+document.getElementById("day-back").addEventListener("click", () => {
+    day_clicks--;
+    console.log('click back');
+    changeDateDay();
+    //Tasks des spezifischen Tages laden
+});
+
+document.getElementById("day-forward").addEventListener("click", () => {
+    day_clicks = day_clicks + 1  
+    console.log('click forward');
+    changeDateDay();
+    //Tasks des spezifischen Tages laden
+});
+
+document.getElementById("task-history").addEventListener("click", () => {
+    document.getElementById("hub").style.display = "none";
+});
+
+
+
+// #endregion
+
 // #region etwas in eine Liste einfügen welche zwei Spalten hat
 function insert_into_table_with_two_columns(idTemplate,idParent,content,color) {
     let original    = document.getElementById(idTemplate);
