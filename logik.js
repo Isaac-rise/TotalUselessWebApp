@@ -43,29 +43,64 @@ changeCurrentDate(generateDateAsStr(dateToday)); //setzt immer beim neustarten d
 
 // #region button controlling
 
-document.getElementById("today").addEventListener("click", () => {
+document.getElementById("button-today").addEventListener("click", () => {
     changeCurrentDate(generateDateAsStr(dateToday)); //heutiges Datum anzeigen
     choosenDate = new Date()
     // heutige Tasks anzeigen
 });
 
-document.getElementById("day-back").addEventListener("click", () => {
+document.getElementById("button-day-back").addEventListener("click", () => {
     day_clicks--;
     console.log('click back');
     changeDateDay();
     //Tasks des spezifischen Tages laden
 });
 
-document.getElementById("day-forward").addEventListener("click", () => {
+document.getElementById("button-day-forward").addEventListener("click", () => {
     day_clicks = day_clicks + 1  
     console.log('click forward');
     changeDateDay();
     //Tasks des spezifischen Tages laden
 });
 
-document.getElementById("task-history").addEventListener("click", () => {
-    document.getElementById("hub").style.display = "none";
+let activity_task_history = 0;
+let activity_date_picker = 0;
+
+document.getElementById("button-task-history").addEventListener("click", () => {
+    if (activity_task_history === 0) {
+        activity_task_history = 1;
+        document.getElementById("abc123").style.display = "none";
+        document.getElementById("information-bar-tasks").style.display = "none";
+        document.getElementById("task-history").style.display = "flex";
+        document.getElementById("date-picker").style.removeProperty("display");
+    } else {
+        activity_task_history = 0;
+        document.getElementById("abc123").style.removeProperty("display");
+        document.getElementById("information-bar-tasks").style.removeProperty("display");
+        document.getElementById("task-history").style.display = "none";
+    }    
 });
+
+document.getElementById("currentDate").addEventListener("click", () => {
+    if (activity_date_picker === 0) {
+        activity_date_picker = 1;
+        document.getElementById("abc123").style.display = "none";
+        document.getElementById("information-bar-tasks").style.display = "none";
+        document.getElementById("date-picker").style.display = "flex";
+        document.getElementById("task-history").style.display = "none";
+    } else {
+        activity_date_picker = 0;
+        document.getElementById("abc123").style.removeProperty("display");
+        document.getElementById("information-bar-tasks").style.removeProperty("display");
+        document.getElementById("date-picker").style.removeProperty("display");
+    }
+});
+
+
+
+
+
+
 
 
 

@@ -152,12 +152,11 @@ span {
   height: 6%;
 }
 
-.information-bar {
+#information-bar-tasks {
   width: 5%;
   display: flex;
-  z-index: 9999;
-  display: flex;
   flex-direction: column;
+  z-index: 9999;
   align-items: center;
 }
 /* endregion */
@@ -234,6 +233,15 @@ span {
   position: relative;
 }
 
+#information-bar-hub {
+  width: 5%;
+  display: flex;
+  flex-direction: column;
+  z-index: 9999;
+  align-items: center;
+}
+
+
 #newBlock {
   min-height: 50%; 
   line-height: 100%; 
@@ -303,6 +311,7 @@ span {
   width: 100%;
   height: 100%;
   overflow-y: auto;
+  overflow-x: hidden;
   flex-shrink: 0;
   display: flex;
   flex-direction: column;
@@ -312,6 +321,30 @@ span {
   box-sizing: border-box;
 }
 
+#task-history {
+  width: 100%;
+  height: 100%;
+  display: none;
+  margin-right: 2mm;
+  background-color: blue;
+}
+
+#button-close-task-history {
+  width: 25px;
+  height: 25px;
+}
+
+#date-picker {
+  width:  100%;
+  min-height: 100%;
+  display: none;
+  margin-right: 2mm;
+  background-color: green;
+}
+
+#button-close-task-history {
+  border: 1px solid black;
+}
 
 .template-task {
   font-size: 14px;
@@ -347,6 +380,11 @@ span {
 #currentDate {
   position: absolute;
   right: 5%;
+}
+
+#button-close-currentDate {
+  height: 25px;
+  width: 25px;
 }
 
 .little-square-button {
