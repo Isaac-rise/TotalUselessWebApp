@@ -10,6 +10,7 @@ let choosenDate     = new Date();
 let day_clicks      = 0;
 let click_marker    = 0;
 
+
 //um 00:00 soll das 
 
 function generateDateAsStr (dateObject) {
@@ -69,13 +70,12 @@ let activity_date_picker = 0;
 document.getElementById("button-task-history").addEventListener("click", () => {
     if (activity_task_history === 0) {
         activity_task_history = 1;
-        document.getElementById("abc123").style.display = "none";
-        document.getElementById("information-bar-tasks").style.display = "none";
+        document.getElementById("task-board").style.display = "none";
         document.getElementById("task-history").style.display = "flex";
         document.getElementById("date-picker").style.removeProperty("display");
     } else {
         activity_task_history = 0;
-        document.getElementById("abc123").style.removeProperty("display");
+        document.getElementById("task-board").style.removeProperty("display");
         document.getElementById("information-bar-tasks").style.removeProperty("display");
         document.getElementById("task-history").style.display = "none";
     }    
@@ -84,15 +84,30 @@ document.getElementById("button-task-history").addEventListener("click", () => {
 document.getElementById("currentDate").addEventListener("click", () => {
     if (activity_date_picker === 0) {
         activity_date_picker = 1;
-        document.getElementById("abc123").style.display = "none";
+        document.getElementById("task-board").style.display = "none";
         document.getElementById("information-bar-tasks").style.display = "none";
         document.getElementById("date-picker").style.display = "flex";
         document.getElementById("task-history").style.display = "none";
     } else {
         activity_date_picker = 0;
-        document.getElementById("abc123").style.removeProperty("display");
+        document.getElementById("task-board").style.removeProperty("display");
         document.getElementById("information-bar-tasks").style.removeProperty("display");
         document.getElementById("date-picker").style.removeProperty("display");
+    }
+});
+
+document.getElementById("button-newObject-picker").addEventListener("click", () => {
+    if (activity_date_picker === 0) {
+        activity_date_picker = 1;
+        document.getElementById("subcontainer-hub-one").style.display = "none";
+        document.getElementById("preview").style.display = "none";
+        document.getElementById("information-bar-hub").style.display = "none";
+        document.getElementById("newObject-picker").style.display = "flex";
+    } else {
+        activity_date_picker = 0;
+        document.getElementById("subcontainer-hub-one").style.removeProperty("display");
+        document.getElementById("information-bar-hub").style.removeProperty("display");
+        document.getElementById("newObject-picker").style.removeProperty("display");
     }
 });
 
@@ -247,6 +262,7 @@ function moveToPage(index) {
     
     pages.style.transform = `translateX(-${currentPage * 100}vw)`;
 }
+moveToPage(1) /// später noch entfernen
 
 //startpunkt einer touch geste abfangen und speichern
 window.addEventListener('touchstart', (event) => {
