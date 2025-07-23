@@ -35,8 +35,20 @@ Blogfreigabe für bestimmte Listen erteilen können:
   <div id="search-bar">
     <input id="search" type="search">
   </div>
-  <!-- endregion -->
 
+
+  <!-- templates -->
+  <div id="templates" style="display: none">
+    <table>
+
+        <tr id="template-row-newObject" style="display: none;">
+          <td id="template-row-newObject-parameter" style="width: 25%;text-align: center;"></td>
+          <td contenteditable="true"></td>
+        </tr>
+
+    </table>
+  </div>
+  
 <div class="viewport-container">
 
   <div id="pages">
@@ -136,11 +148,11 @@ Blogfreigabe für bestimmte Listen erteilen können:
 
 
           </div>
+
           <div id="information-bar-hub" class="information-bar">
             <img id="position-mark-hub-up" class="arrow-up" src="pfeil rechts.svg" talt="Beschreibung" width="12px" height="12px">
             <img id="position-mark-hub-down" class="arrow-down hidden" src="pfeil rechts.svg" alt="Beschreibung" width="12px" height="12px">
           </div>
-
 
         </div>
 
@@ -148,8 +160,6 @@ Blogfreigabe für bestimmte Listen erteilen können:
           <div id="preview" style="display: flex; flex-direction: column;">
 
             <h3 id="heading-preview" style="text-align: center;">Test</h3>
-
-
 
           </div>
 
@@ -161,104 +171,30 @@ Blogfreigabe für bestimmte Listen erteilen können:
 
         </div>
 
-        <div id="newObject-picker">
+        <div id="newObject-picker" class="scroll-container">
 
-          <div id="subcontainer-newObject-picker-one">
-            <div id="template-newObject-one" class="clickable" ">Test1Test1Test1Tes t1Test1Test1Test1 Test1Test1</div> <!-- hier müsste man eigentlich word-break einschalten sobals eine gewisse Anzahl an Buchstaben überschritten wurde, für den Fall das man tatsächlich ein langes Wort eingibt-->
+          <div id="subcontainer-newObject-picker-one" style="display: flex; flex-direction: column; gap: 10px;">
+            <div id="newObject-picker-Task" class="clickable" style="text-align: center;  border: 1px solid black; border-radius: 5px;">Task</div><!--- hier müsste man eigentlich word-break einschalten sobals eine gewisse Anzahl an Buchstaben überschritten wurde, für den Fall das man tatsächlich ein langes Wort eingibt-->
           </div>
 
-          <div id="subcontainer-newObject-picker-two">
-            <div id="template-newObject-two" class="clickable" ">Test1Test1Test1Tes t1Test1Test1Test1 Test1Test1</div>
+          <div id="subcontainer-newObject-picker-two" style="display: flex; flex-direction: column; gap: 10px;">
+            <div id="newObject-picker-Blog" class="clickable" style="text-align: center;  border: 1px solid black; border-radius: 5px;">Blog</div>
           </div>
+
         </div>
 
         <div id="newObject-container">
 
           <div id="newObject-preview">
 
-            <h3 id="heading-newObject" style="text-align: center;">Test</h3>
+            <h3 id="heading-newObject" style="text-align: center;"></h3>
 
             <div id="table-container-newObject">
               <table id="table-newObject">
                 <tbody>
 
                   <!-- General -->
-                  <tr>
-                    <td style="width: 25%;">Title</td>
-                    <td contenteditable="true">hg</td>
-                  </tr>
 
-                  <tr style="height: 30%;" >
-                    <td>Content</td>
-                    <td contentEditable="true"></td>
-                  </tr>
-
-                  <tr>
-                    <td>Categorie</td>
-                    <td contenteditable="true" ></td>
-                  </tr>
-
-                  <!-- Tasks -->
-                  <tr>
-                    <td>Deadline</td>
-                    <td contenteditable="true"></td>
-                  </tr>
-
-                  <tr>
-                    <td>Deadline</td>
-                    <td contenteditable="true"></td>
-                  </tr>
-
-                  <tr>
-                    <td>Deadline</td>
-                    <td contenteditable="true"></td>
-                  </tr>
-
-                  <tr>
-                    <td>Deadline</td>
-                    <td contenteditable="true"></td>
-                  </tr>
-
-                  <tr>
-                    <td>Deadline</td>
-                    <td contenteditable="true"></td>
-                  </tr>
-
-                  <tr>
-                    <td>Deadline</td>
-                    <td contenteditable="true"></td>
-                  </tr>
-
-                  <tr>
-                    <td>Deadline</td>
-                    <td contenteditable="true"></td>
-                  </tr>
-
-
-                  <tr>
-                    <td>Deadline</td>
-                    <td contenteditable="true"></td>
-                  </tr>
-
-                  <tr>
-                    <td>Deadline</td>
-                    <td contenteditable="true"></td>
-                  </tr>
-
-                  <tr>
-                    <td>Deadline</td>
-                    <td contenteditable="true"></td>
-                  </tr>
-
-                  <tr>
-                    <td>Deadline</td>
-                    <td contenteditable="true"></td>
-                  </tr>
-
-                  <tr>
-                    <td>Deadline</td>
-                    <td contenteditable="true"></td>
-                  </tr>
 
                 </tbody>
               </table>

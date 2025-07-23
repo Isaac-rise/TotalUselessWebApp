@@ -5,13 +5,16 @@
 
 // #region basic settings
 // date
-let dateToday     = new Date();
-let choosenDate     = new Date();
-let day_clicks      = 0;
-let click_marker    = 0;
+let dateToday             = new Date();
+let choosenDate           = new Date();
+let day_clicks            = 0;
+let click_marker          = 0;
+let activity_task_history = 0;
+let activity_date_picker  = 0;
 
 
-//um 00:00 soll das 
+
+//um 00:00 soll das
 
 function generateDateAsStr (dateObject) {
     let day   = String(dateObject.getDate()).padStart(2, '0');
@@ -58,14 +61,12 @@ document.getElementById("button-day-back").addEventListener("click", () => {
 });
 
 document.getElementById("button-day-forward").addEventListener("click", () => {
-    day_clicks = day_clicks + 1  
+    day_clicks = day_clicks + 1
     console.log('click forward');
     changeDateDay();
     //Tasks des spezifischen Tages laden
 });
 
-let activity_task_history = 0;
-let activity_date_picker = 0;
 
 document.getElementById("button-task-history").addEventListener("click", () => {
     if (activity_task_history === 0) {
@@ -78,7 +79,7 @@ document.getElementById("button-task-history").addEventListener("click", () => {
         document.getElementById("task-board").style.removeProperty("display");
         document.getElementById("information-bar-tasks").style.removeProperty("display");
         document.getElementById("task-history").style.display = "none";
-    }    
+    }
 });
 
 document.getElementById("currentDate").addEventListener("click", () => {
@@ -99,23 +100,60 @@ document.getElementById("currentDate").addEventListener("click", () => {
 document.getElementById("button-newObject-picker").addEventListener("click", () => {
     if (activity_date_picker === 0) {
         activity_date_picker = 1;
+        document.getElementById("newObject-picker").style.display = "flex";
         document.getElementById("subcontainer-hub-one").style.display = "none";
         document.getElementById("preview").style.display = "none";
         document.getElementById("information-bar-hub").style.display = "none";
-        document.getElementById("newObject-picker").style.display = "flex";
+        document.getElementById("newObject-picker").style.removeProperty("dispay");
     } else {
         activity_date_picker = 0;
+        document.getElementById("newObject-container").style.removeProperty("display");
         document.getElementById("subcontainer-hub-one").style.removeProperty("display");
         document.getElementById("information-bar-hub").style.removeProperty("display");
         document.getElementById("newObject-picker").style.removeProperty("display");
+        document.getElementById("table-newObject").querySelectorAll('.current-newObject').forEach(el => el.remove()); // alle container einer bestimmten Klasse aus einem spezifischne Container entfernen
     }
 });
 
+document.getElementById('newObject-picker').addEventListener('click', function(event) {
 
 
+  // tabellen configs
+  const newObjectArrays = {
+    arrayTask: ['Test1'],
+    //arrayTask: ['Title','Content','Deadline','Categorie','Pictures','Files'],
+    arrayBlog: ['Test2','Test4','Test2','Test4','Test2','Test4','Test2','Test4','Test2','Test4','Test2','Test4'],
+    //arrayBlog: ['Title','Content','Pictures','Files'],
+    //arrayProject: ['Title','']
+  }
 
+  document.getElementById("newObject-picker").style.removeProperty("display");
+  document.getElementById("newObject-container").style.display = "flex";
 
+  // Herausfinden, welches Kind geklickt wurde
+  const clickedElement = event.target;
 
+  // Beispiel: data-id auslesen
+  const id = clickedElement.id.split("-").at(-1);
+  console.log(id);
+
+  // ändert die Überschrift des newObject-previews
+  document.getElementById('heading-newObject').textContent = id
+
+/// hier muss noch die Fehlerbewältigung ergäntzt werden, damit wenn ein Objekt keine Id hat etwas entsprechendes gemacht wird
+  newObjectArrays[`array${id}`].forEach((item, index) => {
+    const newLine = document.getElementById('template-row-newObject').cloneNode(true);  //clont das template
+
+    newLine.querySelector('#template-row-newObject-parameter').textContent = item; //ändert den textConten in dem Id-container
+    newLine.style.removeProperty('display'); //löscht das display: none;
+    newLine.classList.add('current-newObject');
+
+    document.getElementById('table-newObject').querySelector('tbody').appendChild(newLine);
+    console.log('executed');
+
+  });
+
+});
 
 
 
@@ -132,7 +170,7 @@ function insert_into_table_with_two_columns(idTemplate,idParent,content,color) {
     clone.appendChild(newElement);
 
     clone.style.color = color;
-    
+
     container.appendChild(clone);
 }
 // #endregion
@@ -158,7 +196,7 @@ const request = indexedDB.open(dbName, dbVersion);
 
 request.onupgradeneeded = function (event) {
   db = event.target.result;
-  
+
     if (!db.objectStoreNames.contains("habits")) {
     db.createObjectStore("habits", { keyPath: "id"});
     }
@@ -177,14 +215,14 @@ request.onupgradeneeded = function (event) {
 
 /*
     Ich möchte bei den Tasks zunächst nach aktiv und inaktiv unterscheiden. Die aktiven möchte ich absteigend sortieren nach
-    
+
     - mit dem "important" - tag markiert
     - Termine nach Urzeit markiert
-    - (fällig, überfällig) (regelmäßige Aufgaben, habits) - zunächst nach diese nach kategorien 
+    - (fällig, überfällig) (regelmäßige Aufgaben, habits) - zunächst nach diese nach kategorien
     - die nächste Aufgabe von jedem Projekt
 
     - unkategorisierte Aufgaben
-    - habits, termine, random-tasks, nächste Projekt schritte, regelmäßige Aufgaben, Erinnerungen, 
+    - habits, termine, random-tasks, nächste Projekt schritte, regelmäßige Aufgaben, Erinnerungen,
 
 */
 
@@ -208,7 +246,7 @@ function insert_task (title = "",deadline = "",type = "") {
 
 // graph view
 
-// 
+//
 //#endregion
 
 // #region Task in DB schreiben
@@ -226,16 +264,16 @@ request.onsuccess = function (event) {
         1.2.1 wenn der container ein ex container wird, soll der Inhalt in die DB geschrieben werden und dann ein entsprechender container geformt und in das Hub eingefügt werden
               hierbei soll der Term und der Titel ensprechend eingefärbt werden
         1.2.2 wenn der container kein ex container ist soll er entsprechend verarbeitet werden
-            1.2.1 dafür soll zunächst der Term erfasst werden 
+            1.2.1 dafür soll zunächst der Term erfasst werden
             1.2.2 dann soll das entsprechende Datenformat gefunden werden und nach diesem sollen dann die Attribute des Objektes bestimmt werden
-            1.2.3 das Objekt soll dann mit weiteren automatisch erstellten Inhalten in der db erfasst werden 
+            1.2.3 das Objekt soll dann mit weiteren automatisch erstellten Inhalten in der db erfasst werden
 */
 
 const hubField = document.getElementById("hub");
 
 hubField.addEventListener("input", () => {
   const text = hubField.value;
-  
+
   // text scannen
 
 });
@@ -253,13 +291,13 @@ let currentPage = 0;
 let startPosition;
 let endPosition;
 
-//index der Seiten breiten 
+//index der Seiten breiten
 
 //Funktion zur Eventgenerierung definieren
 function moveToPage(index) {
     currentPage = index; //damit ändern wir die Info auf welcher Seite wir danach sind. Für den nächsten Vorgan
     const pages = document.querySelector('#pages');
-    
+
     pages.style.transform = `translateX(-${currentPage * 100}vw)`;
 }
 moveToPage(1) /// später noch entfernen
@@ -277,7 +315,7 @@ window.addEventListener('touchend', (event) => {
     const differenceX = startPosition.touches[0].pageX - endPosition.changedTouches[0].pageX
     const differenceY = startPosition.touches[0].pageY - endPosition.changedTouches[0].pageY
     const exeleration = Math.sqrt(differenceX ** 2 + differenceY ** 2) / (endPosition.timeStamp - startPosition.timeStamp);
-    const maxAngle = 20; 
+    const maxAngle = 20;
     const minExel = 0.6;
     const angle =  Math.atan((differenceY / differenceX)) * (180 / Math.PI);
 
@@ -297,7 +335,7 @@ window.addEventListener('touchend', (event) => {
                 console.log(currentPage)
             }
         }
-    } 
+    }
 });
 
 //scrollverhalten beim öffnen der Tastatur steuern
@@ -320,7 +358,7 @@ window.addEventListener('resize', () => {
   if (window.innerHeight > letzteGemerkteHöhe) {
     // Tastatur vermutlich geschlossen
     //*document.body.style.overflow = 'hidden';
-    
+
     document.querySelector('.pages').style.height = `100%`;
   }
 });
@@ -342,5 +380,5 @@ if (Math.sqrt(((startPostion.pageX - endPositon.pageX) ** 2) + ((startPostion.pa
 
 /*k
 Im Hub werden immer die Zeilen angezeigt welche noch nicht verarbeitet werden sollten, diese werden in einer Tabelle gespeichert
-Wenn wenn ich dann etwas hineinschreibe, wird es in der DB gespeichert, vorher wird es verarbeitet so das 
+Wenn wenn ich dann etwas hineinschreibe, wird es in der DB gespeichert, vorher wird es verarbeitet so das
 */
