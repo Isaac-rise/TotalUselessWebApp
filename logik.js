@@ -9,8 +9,8 @@ let dateToday             = new Date();
 let choosenDate           = new Date();
 let day_clicks            = 0;
 let click_marker          = 0;
-let activity_task_history = 0;
-let activity_date_picker  = 0;
+let pageInFrontHub = 'subcontainer-hub-one';
+const homePageHub = 'subcontainer-hub-one';
 
 
 
@@ -26,7 +26,7 @@ function generateDateAsStr (dateObject) {
 }
 
 function changeCurrentDate (date) {
-    document.getElementById("currentDate").textContent = date;
+    document.getElementById("button-datePicker").textContent = date;
 }
 
 function changeDateDay () {
@@ -46,7 +46,7 @@ changeCurrentDate(generateDateAsStr(dateToday)); //setzt immer beim neustarten d
 // #endregion
 
 // #region button controlling
-
+/*
 document.getElementById("button-today").addEventListener("click", () => {
     changeCurrentDate(generateDateAsStr(dateToday)); //heutiges Datum anzeigen
     choosenDate = new Date()
@@ -114,9 +114,13 @@ document.getElementById("button-newObject-picker").addEventListener("click", () 
         document.getElementById("table-newObject").querySelectorAll('.current-newObject').forEach(el => el.remove()); // alle container einer bestimmten Klasse aus einem spezifischne Container entfernen
     }
 });
+*/
+document.getElementById('newObjectPicker').style.display = 'none';
+document.getElementById('taskHistory').style.display = 'none';
+document.getElementById('newObject-container').style.display = 'none';
+document.getElementById("datePicker").style.display = "none";
 
-document.getElementById('newObject-picker').addEventListener('click', function(event) {
-
+document.getElementById('newObjectPicker').addEventListener('click', function(event) {
 
   // tabellen configs
   const newObjectArrays = {
@@ -127,15 +131,15 @@ document.getElementById('newObject-picker').addEventListener('click', function(e
     //arrayProject: ['Title','']
   }
 
-  document.getElementById("newObject-picker").style.removeProperty("display");
-  document.getElementById("newObject-container").style.display = "flex";
+  document.getElementById('newObjectPicker').style.display = 'none';
+  document.getElementById('newObject-container').style.removeProperty('display');
+  pageInFrontHub = 'newObject-container'
 
   // Herausfinden, welches Kind geklickt wurde
   const clickedElement = event.target;
 
   // Beispiel: data-id auslesen
   const id = clickedElement.id.split("-").at(-1);
-  console.log(id);
 
   // ändert die Überschrift des newObject-previews
   document.getElementById('heading-newObject').textContent = id
@@ -149,12 +153,83 @@ document.getElementById('newObject-picker').addEventListener('click', function(e
     newLine.classList.add('current-newObject');
 
     document.getElementById('table-newObject').querySelector('tbody').appendChild(newLine);
-    console.log('executed');
 
   });
 
 });
 
+document.getElementById('navigation-bar-tasks').addEventListener('click', function(event) {
+
+  const id = event.target.id.split("-").at(1);
+
+  if        (id === 'taskHistory') {
+    if (pageInFrontHub === homePageHub) {
+      document.getElementById('taskHistory').style.removeProperty('display');
+      document.getElementById('subcontainer-hub-one').style.display = 'none';
+      pageInFrontHub = 'taskHistory';
+    } else if (id === pageInFrontHub) {
+      document.getElementById('subcontainer-hub-one').style.removeProperty('display');
+      document.getElementById("taskHistory").style.display = "none";
+      pageInFrontHub = 'subcontainer-hub-one';
+      // für den Fall das ich schon Werte an das neues Object übergeben habe, sollten diese zum
+      // Hub hinzugefügt werden
+
+    } else if (id !== pageInFrontHub) {
+      document.getElementById('taskHistory').style.removeProperty('display');
+      document.getElementById(pageInFrontHub).style.display = 'none';
+      pageInFrontHub = 'taskHistory';
+    }
+
+  } else if (id === 'newObjectPicker') {
+    if (pageInFrontHub === homePageHub) { //wenn ich von der homepage öffne
+      document.getElementById('newObjectPicker').style.removeProperty('display');
+      document.getElementById('subcontainer-hub-one').style.display = 'none';
+      pageInFrontHub = 'newObjectPicker';
+
+    } else if (id === pageInFrontHub) { //wenn ich den Knopf für das öffnen nochmal nehme
+      document.getElementById('subcontainer-hub-one').style.removeProperty('display');
+      document.getElementById("newObjectPicker").style.display = "none";
+      pageInFrontHub = 'subcontainer-hub-one';
+
+    } else if (id !== pageInFrontHub) { //wenn ich von einem Fenster ohne homepage in das andere springe
+      document.getElementById('newObjectPicker').style.removeProperty('display');
+      document.getElementById(pageInFrontHub).style.display = 'none';
+      pageInFrontHub = 'newObjectPicker';
+    }
+
+  } else if (id === 'datePicker') {
+    if (pageInFrontHub === homePageHub) { //wenn ich von der homepage öffne
+      document.getElementById('datePicker').style.removeProperty('display');
+      document.getElementById('subcontainer-hub-one').style.display = 'none';
+      pageInFrontHub = 'datePicker';
+
+    } else if (id === pageInFrontHub) { //wenn ich den Knopf für das öffnen nochmal nehme
+      document.getElementById('subcontainer-hub-one').style.removeProperty('display');
+      document.getElementById("datePicker").style.display = "none";
+      pageInFrontHub = 'subcontainer-hub-one';
+
+    } else if (id !== pageInFrontHub) { //wenn ich von einem Fenster ohne homepage in das andere springe
+      document.getElementById('datePicker').style.removeProperty('display');
+      document.getElementById(pageInFrontHub).style.display = 'none';
+      pageInFrontHub = 'datePicker';
+    }
+
+  } else if (id === 'today') {
+    changeCurrentDate(generateDateAsStr(dateToday)); //heutiges Datum anzeigen
+    choosenDate = new Date()
+    // heutige Tasks anzeigen
+  } else if (id === 'dayBack') {
+    day_clicks--;
+    changeDateDay();
+    //Tasks des spezifischen Tages laden
+  } else if (id === 'dayForward') {
+    day_clicks = day_clicks + 1;
+    changeDateDay();
+    //Tasks des spezifischen Tages laden
+  }
+});
+
+//stehen geblieben, die Dynamiken der Knöpfen und wie diese display modelieren, regeln. Die automatische Container name genierung über die button namen regeln
 
 
 // #endregion
@@ -305,7 +380,6 @@ moveToPage(1) /// später noch entfernen
 //startpunkt einer touch geste abfangen und speichern
 window.addEventListener('touchstart', (event) => {
     startPosition = event;
-    console.log(`test1`)
 });
 
 //entpunkt einer Geste abfangen

@@ -216,7 +216,7 @@ span {
 }
 
 #subcontainer-hub-one {
-  display: none;
+  display: flex;
   flex-direction: row;
   margin-right: 0;
   height: 100%;
@@ -234,12 +234,12 @@ span {
   background-color: green;
 }
 
-#newObject-picker {
+#newObjectPicker {
   height: 100%;
   width: calc(100% - 4mm);
   overflow-y: scroll;
   overflow-x: hidden;
-  display: none;
+  display: flex;
   flex-direction: row;
   gap: 5px;
   padding: 2mm;
@@ -249,7 +249,7 @@ span {
   height: 100%;
   width: 100%;
   max-width: 100%;
-  display: none;
+  display: flex;
   flex-direction: column;
 }
 
@@ -454,7 +454,7 @@ span {
   padding:2mm;
 }
 
-#task-board {
+#taskBoard {
   width: 95%;
   height: 100%;
   overflow-y: auto;
@@ -468,10 +468,18 @@ span {
   box-sizing: border-box;
 }
 
-#task-history {
+#taskHistory {
   width: 100%;
   height: calc(100% - 4mm);
-  display: none;
+  display: flex;
+  margin: 2mm;
+  background-color: green;
+}
+
+#datePicker {
+  width: 100%;
+  height: calc(100% - 4mm);
+  display: flex;
   margin: 2mm;
   background-color: blue;
 }
@@ -532,7 +540,7 @@ span {
 }
 
 
-#currentDate {
+#button-datePicker {
   position: absolute;
   right: 5%;
 }
