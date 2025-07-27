@@ -11,6 +11,11 @@ let day_clicks            = 0;
 let click_marker          = 0;
 let pageInFrontHub = 'subcontainer-hub-one';
 const homePageHub = 'subcontainer-hub-one';
+document.getElementById('newObjectPicker').style.display = 'none';
+document.getElementById('taskHistory').style.display = 'none';
+document.getElementById('newObject-container').style.display = 'none';
+document.getElementById("datePicker").style.display = "none";
+
 
 
 
@@ -43,83 +48,26 @@ function changeDateDay () {
 
 changeCurrentDate(generateDateAsStr(dateToday)); //setzt immer beim neustarten der app das heutige Datum
 
+//TabellenDaten auslesen
+function processingTableData (status) {
+  const tableData = document.getElementById('table-newObject').querySelectorAll('.current-newObject')
+
+  let newData  = {};
+
+  tableData.forEach(row => {
+    let textContent   = row.querySelectorAll('td')[1].textContent.trim();
+    let typeOfContent = row.querySelectorAll('td')[0].textContent;
+    if (typeOfContent.length > 0) {
+        newData[typeOfContent] = textContent;
+      };
+    });
+    newData.status = status;
+    //der Datenbank Werte einfügen
+  }
+
 // #endregion
 
 // #region button controlling
-/*
-document.getElementById("button-today").addEventListener("click", () => {
-    changeCurrentDate(generateDateAsStr(dateToday)); //heutiges Datum anzeigen
-    choosenDate = new Date()
-    // heutige Tasks anzeigen
-});
-
-document.getElementById("button-day-back").addEventListener("click", () => {
-    day_clicks--;
-    console.log('click back');
-    changeDateDay();
-    //Tasks des spezifischen Tages laden
-});
-
-document.getElementById("button-day-forward").addEventListener("click", () => {
-    day_clicks = day_clicks + 1
-    console.log('click forward');
-    changeDateDay();
-    //Tasks des spezifischen Tages laden
-});
-
-
-document.getElementById("button-task-history").addEventListener("click", () => {
-    if (activity_task_history === 0) {
-        activity_task_history = 1;
-        document.getElementById("task-board").style.display = "none";
-        document.getElementById("task-history").style.display = "flex";
-        document.getElementById("date-picker").style.removeProperty("display");
-    } else {
-        activity_task_history = 0;
-        document.getElementById("task-board").style.removeProperty("display");
-        document.getElementById("information-bar-tasks").style.removeProperty("display");
-        document.getElementById("task-history").style.display = "none";
-    }
-});
-
-document.getElementById("currentDate").addEventListener("click", () => {
-    if (activity_date_picker === 0) {
-        activity_date_picker = 1;
-        document.getElementById("task-board").style.display = "none";
-        document.getElementById("information-bar-tasks").style.display = "none";
-        document.getElementById("date-picker").style.display = "flex";
-        document.getElementById("task-history").style.display = "none";
-    } else {
-        activity_date_picker = 0;
-        document.getElementById("task-board").style.removeProperty("display");
-        document.getElementById("information-bar-tasks").style.removeProperty("display");
-        document.getElementById("date-picker").style.removeProperty("display");
-    }
-});
-
-document.getElementById("button-newObject-picker").addEventListener("click", () => {
-    if (activity_date_picker === 0) {
-        activity_date_picker = 1;
-        document.getElementById("newObject-picker").style.display = "flex";
-        document.getElementById("subcontainer-hub-one").style.display = "none";
-        document.getElementById("preview").style.display = "none";
-        document.getElementById("information-bar-hub").style.display = "none";
-        document.getElementById("newObject-picker").style.removeProperty("dispay");
-    } else {
-        activity_date_picker = 0;
-        document.getElementById("newObject-container").style.removeProperty("display");
-        document.getElementById("subcontainer-hub-one").style.removeProperty("display");
-        document.getElementById("information-bar-hub").style.removeProperty("display");
-        document.getElementById("newObject-picker").style.removeProperty("display");
-        document.getElementById("table-newObject").querySelectorAll('.current-newObject').forEach(el => el.remove()); // alle container einer bestimmten Klasse aus einem spezifischne Container entfernen
-    }
-});
-*/
-document.getElementById('newObjectPicker').style.display = 'none';
-document.getElementById('taskHistory').style.display = 'none';
-document.getElementById('newObject-container').style.display = 'none';
-document.getElementById("datePicker").style.display = "none";
-
 document.getElementById('newObjectPicker').addEventListener('click', function(event) {
 
   // tabellen configs
@@ -163,55 +111,62 @@ document.getElementById('navigation-bar-tasks').addEventListener('click', functi
   const id = event.target.id.split("-").at(1);
 
   if        (id === 'taskHistory') {
+
     if (pageInFrontHub === homePageHub) {
-      document.getElementById('taskHistory').style.removeProperty('display');
-      document.getElementById('subcontainer-hub-one').style.display = 'none';
-      pageInFrontHub = 'taskHistory';
+      document.getElementById(pageInFrontHub).style.display = 'none';
+      document.getElementById(id).style.removeProperty('display');
+      pageInFrontHub = id;
     } else if (id === pageInFrontHub) {
-      document.getElementById('subcontainer-hub-one').style.removeProperty('display');
-      document.getElementById("taskHistory").style.display = "none";
-      pageInFrontHub = 'subcontainer-hub-one';
+      document.getElementById(pageInFrontHub).style.display = "none";
+      document.getElementById(homePageHub).style.removeProperty('display');
+      pageInFrontHub = homePageHub;
       // für den Fall das ich schon Werte an das neues Object übergeben habe, sollten diese zum
       // Hub hinzugefügt werden
-
     } else if (id !== pageInFrontHub) {
-      document.getElementById('taskHistory').style.removeProperty('display');
+      if (pageInFrontHub === 'newObject-container') {
+        processingTableData('waiting')
+      }
       document.getElementById(pageInFrontHub).style.display = 'none';
-      pageInFrontHub = 'taskHistory';
+      document.getElementById(id).style.removeProperty('display');
+      pageInFrontHub = id;
     }
 
   } else if (id === 'newObjectPicker') {
     if (pageInFrontHub === homePageHub) { //wenn ich von der homepage öffne
-      document.getElementById('newObjectPicker').style.removeProperty('display');
-      document.getElementById('subcontainer-hub-one').style.display = 'none';
-      pageInFrontHub = 'newObjectPicker';
-
-    } else if (id === pageInFrontHub) { //wenn ich den Knopf für das öffnen nochmal nehme
-      document.getElementById('subcontainer-hub-one').style.removeProperty('display');
-      document.getElementById("newObjectPicker").style.display = "none";
-      pageInFrontHub = 'subcontainer-hub-one';
-
-    } else if (id !== pageInFrontHub) { //wenn ich von einem Fenster ohne homepage in das andere springe
-      document.getElementById('newObjectPicker').style.removeProperty('display');
       document.getElementById(pageInFrontHub).style.display = 'none';
-      pageInFrontHub = 'newObjectPicker';
+      document.getElementById(id).style.removeProperty('display');
+      pageInFrontHub = id;
+      console.log(pageInFrontHub)
+    }  else if (id === pageInFrontHub || 'newObject-container' === pageInFrontHub) { //wenn ich den Knopf für das öffnen nochmal nehme
+      if (pageInFrontHub === 'newObject-container') {
+        processingTableData('waiting')
+      }
+      document.getElementById(pageInFrontHub).style.display = "none";
+      document.getElementById(homePageHub).style.removeProperty('display');
+      pageInFrontHub = homePageHub;
+    } else if (id !== pageInFrontHub) { //wenn ich von einem Fenster ohne homepage in das andere springe
+      console.log(pageInFrontHub)
+      document.getElementById(pageInFrontHub).style.display = 'none';
+      document.getElementById(id).style.removeProperty('display');
+      pageInFrontHub = id;
     }
 
   } else if (id === 'datePicker') {
     if (pageInFrontHub === homePageHub) { //wenn ich von der homepage öffne
-      document.getElementById('datePicker').style.removeProperty('display');
-      document.getElementById('subcontainer-hub-one').style.display = 'none';
-      pageInFrontHub = 'datePicker';
-
-    } else if (id === pageInFrontHub) { //wenn ich den Knopf für das öffnen nochmal nehme
-      document.getElementById('subcontainer-hub-one').style.removeProperty('display');
-      document.getElementById("datePicker").style.display = "none";
-      pageInFrontHub = 'subcontainer-hub-one';
-
-    } else if (id !== pageInFrontHub) { //wenn ich von einem Fenster ohne homepage in das andere springe
-      document.getElementById('datePicker').style.removeProperty('display');
       document.getElementById(pageInFrontHub).style.display = 'none';
-      pageInFrontHub = 'datePicker';
+      document.getElementById(id).style.removeProperty('display');
+      pageInFrontHub = id;
+    } else if (id === pageInFrontHub) { //wenn ich den Knopf für das öffnen nochmal nehme
+      document.getElementById(pageInFrontHub).style.display = "none";
+      document.getElementById(homePageHub).style.removeProperty('display');
+      pageInFrontHub = homePageHub;
+    } else if (id !== pageInFrontHub) { //wenn ich von einem Fenster ohne homepage in das andere springe
+      if (pageInFrontHub === 'newObject-container') {
+        processingTableData('waiting')
+      }
+      document.getElementById(pageInFrontHub).style.display = 'none';
+      document.getElementById(id).style.removeProperty('display');
+      pageInFrontHub = id;
     }
 
   } else if (id === 'today') {
@@ -229,8 +184,23 @@ document.getElementById('navigation-bar-tasks').addEventListener('click', functi
   }
 });
 
-//stehen geblieben, die Dynamiken der Knöpfen und wie diese display modelieren, regeln. Die automatische Container name genierung über die button namen regeln
+document.getElementById('toolBar-newObject').addEventListener('click', function(event) {
+  const button = event.target.closest('button');
 
+  if (!button) return;
+
+  const id = button.id.split('-').at(1);
+
+  document.getElementById('newObject-container').style.display = 'none';
+  document.getElementById(homePageHub).style.removeProperty('display');
+  pageInFrontHub = homePageHub
+
+  if (id === 'waitNewObject') {
+    processingTableData('waiting')
+  } else if (id === 'confirmNewObject') {
+    processingTableData('confirmed')
+  }
+});
 
 // #endregion
 
@@ -321,29 +291,15 @@ function insert_task (title = "",deadline = "",type = "") {
 
 // graph view
 
-//
-//#endregion
 
-// #region Task in DB schreiben
+// Task in DB schreiben
 request.onsuccess = function (event) {
     db = event.target.result;
     insert_task("TestTitle","12-12-2025")
 }
-// #endregion
 
-// #region Listener Hub
-/*
-1. Ich möchte im Hubbereich einen ex-container anklicken und diesen weiter bearbeiten oder einen neuen Auftrag schreiben und dafür den leeren Container auswählen
-    1.1 wenn ich einen container bearbeite möchte ich das im Nachhinein der Inhalt den Eintrag in der DB updatet
-    1.2 wenn ich den leeren Bereich anwähle möchte ich das bei verlassen der Container verarbeitet wird
-        1.2.1 wenn der container ein ex container wird, soll der Inhalt in die DB geschrieben werden und dann ein entsprechender container geformt und in das Hub eingefügt werden
-              hierbei soll der Term und der Titel ensprechend eingefärbt werden
-        1.2.2 wenn der container kein ex container ist soll er entsprechend verarbeitet werden
-            1.2.1 dafür soll zunächst der Term erfasst werden
-            1.2.2 dann soll das entsprechende Datenformat gefunden werden und nach diesem sollen dann die Attribute des Objektes bestimmt werden
-            1.2.3 das Objekt soll dann mit weiteren automatisch erstellten Inhalten in der db erfasst werden
-*/
 
+//
 const hubField = document.getElementById("hub");
 
 hubField.addEventListener("input", () => {
@@ -353,11 +309,6 @@ hubField.addEventListener("input", () => {
 
 });
 
-// #endregion
-
-// #region coloring hub
-
-// #endregion
 
 // #region Srollverhalten
 if (window.innerWidth <= 799) {
@@ -439,20 +390,3 @@ window.addEventListener('resize', () => {
 
 
 }
-
-
-/*
-if (Math.sqrt(((startPostion.pageX - endPositon.pageX) ** 2) + ((startPostion.pageY - endPositon.pageY) ** 2)) > 25) {
-    console.log(`right speed successful`);
-}
-*/
-
-
-// #endregion
-
-
-
-/*k
-Im Hub werden immer die Zeilen angezeigt welche noch nicht verarbeitet werden sollten, diese werden in einer Tabelle gespeichert
-Wenn wenn ich dann etwas hineinschreibe, wird es in der DB gespeichert, vorher wird es verarbeitet so das
-*/
