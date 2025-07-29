@@ -9,6 +9,7 @@ let dateToday             = new Date();
 let choosenDate           = new Date();
 let day_clicks            = 0;
 let click_marker          = 0;
+let newData               = {};
 let pageInFrontHub = 'subcontainer-hub-one';
 const homePageHub = 'subcontainer-hub-one';
 document.getElementById('newObjectPicker').style.display = 'none';
@@ -19,7 +20,7 @@ document.getElementById("datePicker").style.display = "none";
 
 
 
-//um 00:00 soll das
+//um 00:00 soll das heutige Datum umwechseln
 
 function generateDateAsStr (dateObject) {
     let day   = String(dateObject.getDate()).padStart(2, '0');
@@ -48,6 +49,38 @@ function changeDateDay () {
 
 changeCurrentDate(generateDateAsStr(dateToday)); //setzt immer beim neustarten der app das heutige Datum
 
+// db managment
+function insertInDb (type,object) {
+    const store = db.transaction(type, 'readwrite').objectStore(type);
+    /// generateShortId sollte immer einen richtigen key zurückgeben, sonst kommt es zu problemene,
+    /// diese Fehler müssen abgefangen und behandelt werden
+    store.put(object, generateShortId())
+
+        /// Statustypen: waiting (waiting in hub), confirmed (finished manipulating data),
+        ///              scheduled (wenn in tasks geladen), on hold (wenn begonnen aber pausiert),
+        ///              finished (wenn abgeschlossen)
+
+    };
+
+function changeStatusOfObject (type,id,newStatus) {
+  const store = db.transaction(type, 'readwrite').objectStore(type);
+
+  const dbObject = store.get(id);
+
+  dbObject.onsuccess = function () {
+    const object = dbObject.result;
+
+    if (object) {
+      object.status = newStatus;
+
+      store.put(object,id) //läd das geänderte Objekt wieder zurück in die db
+
+    } else {
+      // Fehlerlösung für falsch übergebene id bereitstellen
+    }
+  }
+}
+
 //TabellenDaten auslesen
 function processingTableData (status) {
   const tableData = document.getElementById('table-newObject').querySelectorAll('.current-newObject')
@@ -65,7 +98,10 @@ function processingTableData (status) {
     //der Datenbank Werte einfügen
   }
 
-// #endregion
+function deletingObjectsOutContainer (container, className) {
+  const objects = document.getElementById(container).querySelectorAll('.' + className);
+  objects.forEach(el => el.remove());
+}
 
 // #region button controlling
 document.getElementById('newObjectPicker').addEventListener('click', function(event) {
@@ -125,6 +161,9 @@ document.getElementById('navigation-bar-tasks').addEventListener('click', functi
     } else if (id !== pageInFrontHub) {
       if (pageInFrontHub === 'newObject-container') {
         processingTableData('waiting')
+        // Daten in db überführen
+        deletingObjectsOutContainer('table-newObject','current-newObject')
+        insertInDb
       }
       document.getElementById(pageInFrontHub).style.display = 'none';
       document.getElementById(id).style.removeProperty('display');
@@ -140,6 +179,8 @@ document.getElementById('navigation-bar-tasks').addEventListener('click', functi
     }  else if (id === pageInFrontHub || 'newObject-container' === pageInFrontHub) { //wenn ich den Knopf für das öffnen nochmal nehme
       if (pageInFrontHub === 'newObject-container') {
         processingTableData('waiting')
+        // Daten in db überführen
+        deletingObjectsOutContainer('table-newObject','current-newObject')
       }
       document.getElementById(pageInFrontHub).style.display = "none";
       document.getElementById(homePageHub).style.removeProperty('display');
@@ -163,6 +204,8 @@ document.getElementById('navigation-bar-tasks').addEventListener('click', functi
     } else if (id !== pageInFrontHub) { //wenn ich von einem Fenster ohne homepage in das andere springe
       if (pageInFrontHub === 'newObject-container') {
         processingTableData('waiting')
+        // Daten in db überführen
+        deletingObjectsOutContainer('table-newObject','current-newObject')
       }
       document.getElementById(pageInFrontHub).style.display = 'none';
       document.getElementById(id).style.removeProperty('display');
@@ -194,6 +237,7 @@ document.getElementById('toolBar-newObject').addEventListener('click', function(
   document.getElementById('newObject-container').style.display = 'none';
   document.getElementById(homePageHub).style.removeProperty('display');
   pageInFrontHub = homePageHub
+  deletingObjectsOutContainer('table-newObject','current-newObject')
 
   if (id === 'waitNewObject') {
     processingTableData('waiting')
@@ -271,32 +315,12 @@ request.onupgradeneeded = function (event) {
 
 */
 
-// Tasks
-function insert_task (title = "",deadline = "",type = "") {
-    const tx = db.transaction("tasks", "readwrite");
-    const store = tx.objectStore("tasks");
 
-    const newTask = {
-        id: generateShortId(),
-        title: title,
-        deadline: deadline,
-        type: type,
-        status: "active"
-
-    };
-    store.add(newTask);
-}
 
 // in finished Tasks bewegen
 
 // graph view
 
-
-// Task in DB schreiben
-request.onsuccess = function (event) {
-    db = event.target.result;
-    insert_task("TestTitle","12-12-2025")
-}
 
 
 //
