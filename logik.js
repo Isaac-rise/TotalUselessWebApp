@@ -1,5 +1,6 @@
 // #region Archiv
 //localStorage.setItem("choosenDate",dateToday.toISOString()); //speichert das dateObjekt von heute im lokalen Speicher
+//manageTableInDb(name.toLowerCase().replaceAll(" ", "-"))
 
 // #endregion
 
@@ -18,6 +19,78 @@ document.getElementById('newObject-container').style.display = 'none';
 document.getElementById("datePicker").style.display = "none";
 
 
+// region Database
+//db öffnen
+let db;
+const request = indexedDB.open('Web-App');
+let dbVersion;
+
+// ...und Inhalte laden
+request.onsuccess = function (event) {
+  db = event.target.result;
+  dbVersion = db.version;
+  db.transaction('task', 'readwrite').objectStore('task').clear().onsuccess = function () {}; //löscht alle Einträge der benannten Tabelle
+};
+
+// neue Tabellen in der db erstellen
+function manageTableInDb (type,name) {
+
+  if (type === 'c') {
+
+    if (db) {
+      db.close();
+      dbVersion += 1
+      console.log('dbVersion')
+      console.log(dbVersion)
+
+      const request = indexedDB.open('Web-App', dbVersion);
+
+      request.onupgradeneeded = function (event) {
+        let newTable = event.target.result;
+
+        newTable.createObjectStore(name, { keyPath: "id" });  // neue Tabelle erstellen
+        //newTable.deleteObjectStore('tasks');                  // bestehende Tabelle löschen
+
+
+      }
+
+      request.onsuccess = function (event) {
+        db = event.target.result;
+      }
+
+    } else {
+      setTimeout(() => createNewTableInDb('c',name), 50); // prüft alle 50ms
+    }
+
+  } else if (type === 'd') {
+    if (db) {
+      db.close();
+      dbVersion += 1
+      console.log('dbVersion')
+      console.log(dbVersion)
+
+      const request = indexedDB.open('Web-App', dbVersion);
+
+      request.onupgradeneeded = function (event) {
+        let newTable = event.target.result;
+
+        newTable.deleteObjectStore(name);                  // bestehende Tabelle löschen
+
+
+      }
+
+      request.onsuccess = function (event) {
+        db = event.target.result;
+      }
+
+    } else {
+      setTimeout(() => createNewTableInDb('d',name), 50); // prüft alle 50ms
+    }
+  }
+}
+
+
+//Index
 
 
 //um 00:00 soll das heutige Datum umwechseln
@@ -54,7 +127,8 @@ function insertInDb (type,object) {
     const store = db.transaction(type, 'readwrite').objectStore(type);
     /// generateShortId sollte immer einen richtigen key zurückgeben, sonst kommt es zu problemene,
     /// diese Fehler müssen abgefangen und behandelt werden
-    store.put(object, generateShortId())
+    object.id = generateShortId();
+    store.put(object)
 
         /// Statustypen: waiting (waiting in hub), confirmed (finished manipulating data),
         ///              scheduled (wenn in tasks geladen), on hold (wenn begonnen aber pausiert),
@@ -79,25 +153,26 @@ function changeStatusOfObject (type,id,newStatus) {
       // Fehlerlösung für falsch übergebene id bereitstellen
     }
   }
-}
+} /// muss noch gedebugged werden
 
 //TabellenDaten auslesen
 function processingTableData (status) {
   const tableData = document.getElementById('table-newObject').querySelectorAll('.current-newObject')
 
-  let newData  = {};
-
-  tableData.forEach(row => {
-    let textContent   = row.querySelectorAll('td')[1].textContent.trim();
-    let typeOfContent = row.querySelectorAll('td')[0].textContent;
-    if (typeOfContent.length > 0) {
-        newData[typeOfContent] = textContent;
+  if (tableData.length > 0){ }
+    tableData.forEach(row => {
+      let typeOfContent = row.querySelectorAll('td')[0].textContent;
+      let textContent   = row.querySelectorAll('td')[1].textContent.trim();
+      if (typeOfContent.length > 0) {
+          newData[typeOfContent] = textContent;
       };
     });
+
     newData.status = status;
-    //der Datenbank Werte einfügen
+
   }
 
+// DOM managment
 function deletingObjectsOutContainer (container, className) {
   const objects = document.getElementById(container).querySelectorAll('.' + className);
   objects.forEach(el => el.remove());
@@ -133,10 +208,13 @@ document.getElementById('newObjectPicker').addEventListener('click', function(ev
     const newLine = document.getElementById('template-row-newObject').cloneNode(true);  //clont das template
 
     newLine.querySelector('#template-row-newObject-parameter').textContent = item; //ändert den textConten in dem Id-container
-    newLine.style.removeProperty('display'); //löscht das display: none;
+    newLine.style.removeProperty('display');  //löscht das display: none;
+    newLine.querySelector('td').removeAttribute('id');
+    newLine.removeAttribute('id');
     newLine.classList.add('current-newObject');
 
     document.getElementById('table-newObject').querySelector('tbody').appendChild(newLine);
+
 
   });
 
@@ -161,9 +239,8 @@ document.getElementById('navigation-bar-tasks').addEventListener('click', functi
     } else if (id !== pageInFrontHub) {
       if (pageInFrontHub === 'newObject-container') {
         processingTableData('waiting')
-        // Daten in db überführen
+        insertInDb(document.getElementById('newObject-container').querySelector('h3').textContent.toLowerCase().replaceAll(" ", "-"),newData) /// debuggen !
         deletingObjectsOutContainer('table-newObject','current-newObject')
-        insertInDb
       }
       document.getElementById(pageInFrontHub).style.display = 'none';
       document.getElementById(id).style.removeProperty('display');
@@ -175,18 +252,16 @@ document.getElementById('navigation-bar-tasks').addEventListener('click', functi
       document.getElementById(pageInFrontHub).style.display = 'none';
       document.getElementById(id).style.removeProperty('display');
       pageInFrontHub = id;
-      console.log(pageInFrontHub)
     }  else if (id === pageInFrontHub || 'newObject-container' === pageInFrontHub) { //wenn ich den Knopf für das öffnen nochmal nehme
       if (pageInFrontHub === 'newObject-container') {
         processingTableData('waiting')
-        // Daten in db überführen
+        insertInDb(document.getElementById('newObject-container').querySelector('h3').textContent.toLowerCase().replaceAll(" ", "-"),newData)
         deletingObjectsOutContainer('table-newObject','current-newObject')
       }
       document.getElementById(pageInFrontHub).style.display = "none";
       document.getElementById(homePageHub).style.removeProperty('display');
       pageInFrontHub = homePageHub;
     } else if (id !== pageInFrontHub) { //wenn ich von einem Fenster ohne homepage in das andere springe
-      console.log(pageInFrontHub)
       document.getElementById(pageInFrontHub).style.display = 'none';
       document.getElementById(id).style.removeProperty('display');
       pageInFrontHub = id;
@@ -204,7 +279,7 @@ document.getElementById('navigation-bar-tasks').addEventListener('click', functi
     } else if (id !== pageInFrontHub) { //wenn ich von einem Fenster ohne homepage in das andere springe
       if (pageInFrontHub === 'newObject-container') {
         processingTableData('waiting')
-        // Daten in db überführen
+        insertInDb(document.getElementById('newObject-container').querySelector('h3').textContent.toLowerCase().replaceAll(" ", "-"),newData)
         deletingObjectsOutContainer('table-newObject','current-newObject')
       }
       document.getElementById(pageInFrontHub).style.display = 'none';
@@ -237,13 +312,16 @@ document.getElementById('toolBar-newObject').addEventListener('click', function(
   document.getElementById('newObject-container').style.display = 'none';
   document.getElementById(homePageHub).style.removeProperty('display');
   pageInFrontHub = homePageHub
-  deletingObjectsOutContainer('table-newObject','current-newObject')
 
   if (id === 'waitNewObject') {
     processingTableData('waiting')
+    insertInDb(document.getElementById('newObject-container').querySelector('h3').textContent.toLowerCase().replaceAll(" ", "-"),newData)
   } else if (id === 'confirmNewObject') {
     processingTableData('confirmed')
+    insertInDb(document.getElementById('newObject-container').querySelector('h3').textContent.toLowerCase().replaceAll(" ", "-"),newData)
   }
+
+  deletingObjectsOutContainer('table-newObject','current-newObject')
 });
 
 // #endregion
@@ -275,28 +353,6 @@ function generateShortId(length = 15) {
 }
 // #endregion
 
-// #region Database
-const dbName = "Web-App";
-const dbVersion = 11;
-
-let db;
-
-const request = indexedDB.open(dbName, dbVersion);
-
-request.onupgradeneeded = function (event) {
-  db = event.target.result;
-
-    if (!db.objectStoreNames.contains("habits")) {
-    db.createObjectStore("habits", { keyPath: "id"});
-    }
-
-    if (!db.objectStoreNames.contains("repeating-tasks")) {
-        db.createObjectStore("repeating-tasks", { keyPath: "id"});
-    }
-};
-
-//Index
-
 
 //#endregion
 
@@ -315,24 +371,9 @@ request.onupgradeneeded = function (event) {
 
 */
 
-
-
 // in finished Tasks bewegen
 
 // graph view
-
-
-
-//
-const hubField = document.getElementById("hub");
-
-hubField.addEventListener("input", () => {
-  const text = hubField.value;
-
-  // text scannen
-
-});
-
 
 // #region Srollverhalten
 if (window.innerWidth <= 799) {
