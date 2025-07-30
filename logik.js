@@ -2,17 +2,34 @@
 //localStorage.setItem("choosenDate",dateToday.toISOString()); //speichert das dateObjekt von heute im lokalen Speicher
 //manageTableInDb(name.toLowerCase().replaceAll(" ", "-"))
 
+/*Notes
+
+Statustypen: waiting (waiting in hub), confirmed (finished manipulating data),
+              scheduled (wenn in tasks geladen), on hold (wenn begonnen aber pausiert),
+              finished (wenn abgeschlossen)
+
+indizes:
+statustypen pro Tabelle
+
+für alle Eigenschaften nach welchen ich besonders schnell suchen möchte
+
+
+*/
+
+
+
 // #endregion
 
 // #region basic settings
 // date
-let dateToday             = new Date();
-let choosenDate           = new Date();
-let day_clicks            = 0;
-let click_marker          = 0;
-let newData               = {};
-let pageInFrontHub = 'subcontainer-hub-one';
-const homePageHub = 'subcontainer-hub-one';
+let   dateToday             = new Date();
+let   choosenDate           = new Date();
+let   day_clicks            = 0;
+let   click_marker          = 0;
+let   newData               = {};
+let   pageInFrontHub        = 'subcontainer-hub-one';
+const homePageHub           = 'subcontainer-hub-one';
+
 document.getElementById('newObjectPicker').style.display = 'none';
 document.getElementById('taskHistory').style.display = 'none';
 document.getElementById('newObject-container').style.display = 'none';
@@ -29,66 +46,7 @@ let dbVersion;
 request.onsuccess = function (event) {
   db = event.target.result;
   dbVersion = db.version;
-  db.transaction('task', 'readwrite').objectStore('task').clear().onsuccess = function () {}; //löscht alle Einträge der benannten Tabelle
 };
-
-// neue Tabellen in der db erstellen
-function manageTableInDb (type,name) {
-
-  if (type === 'c') {
-
-    if (db) {
-      db.close();
-      dbVersion += 1
-      console.log('dbVersion')
-      console.log(dbVersion)
-
-      const request = indexedDB.open('Web-App', dbVersion);
-
-      request.onupgradeneeded = function (event) {
-        let newTable = event.target.result;
-
-        newTable.createObjectStore(name, { keyPath: "id" });  // neue Tabelle erstellen
-        //newTable.deleteObjectStore('tasks');                  // bestehende Tabelle löschen
-
-
-      }
-
-      request.onsuccess = function (event) {
-        db = event.target.result;
-      }
-
-    } else {
-      setTimeout(() => createNewTableInDb('c',name), 50); // prüft alle 50ms
-    }
-
-  } else if (type === 'd') {
-    if (db) {
-      db.close();
-      dbVersion += 1
-      console.log('dbVersion')
-      console.log(dbVersion)
-
-      const request = indexedDB.open('Web-App', dbVersion);
-
-      request.onupgradeneeded = function (event) {
-        let newTable = event.target.result;
-
-        newTable.deleteObjectStore(name);                  // bestehende Tabelle löschen
-
-
-      }
-
-      request.onsuccess = function (event) {
-        db = event.target.result;
-      }
-
-    } else {
-      setTimeout(() => createNewTableInDb('d',name), 50); // prüft alle 50ms
-    }
-  }
-}
-
 
 //Index
 
@@ -129,15 +87,10 @@ function insertInDb (type,object) {
     /// diese Fehler müssen abgefangen und behandelt werden
     object.id = generateShortId();
     store.put(object)
-
-        /// Statustypen: waiting (waiting in hub), confirmed (finished manipulating data),
-        ///              scheduled (wenn in tasks geladen), on hold (wenn begonnen aber pausiert),
-        ///              finished (wenn abgeschlossen)
-
     };
 
-function changeStatusOfObject (type,id,newStatus) {
-  const store = db.transaction(type, 'readwrite').objectStore(type);
+function changeStatusOfObject (storeName,id,newStatus) {
+  const store = db.transaction(type, 'readwrite').objectStore(storeName);
 
   const dbObject = store.get(id);
 
@@ -154,6 +107,50 @@ function changeStatusOfObject (type,id,newStatus) {
     }
   }
 } /// muss noch gedebugged werden
+
+function manageTableInDb (type,name) {
+  if (db) {
+    db.close();
+    dbVersion += 1
+
+    const request = indexedDB.open('Web-App', dbVersion);
+
+    request.onupgradeneeded = function (event) {
+      let table = event.target.result;
+
+      if (type === 'c') {
+        const store = table.createObjectStore(name, { keyPath: "id" });  // neue Tabelle erstellen
+        store.createIndex(`statusIndex-${name}`, "status");
+      } else if (type === 'd') {
+        table.deleteObjectStore(name);
+      }
+    }
+
+    request.onsuccess = function (event) {
+      db = event.target.result;
+    }
+
+  } else {
+    setTimeout(() => manageTableInDb(type,name), 50); // prüft alle 50ms
+  }
+}
+
+function createIndex (storeName,cellName) {
+  if (db) {
+    db.close();
+    dbVersion += 1
+
+    let request = indexedDB.open('Web-App', dbVersion);
+
+    request.onupgradeneeded = function (event) {
+      let store = event.target.transaction.objectStore(storeName);
+      store.createIndex(`statusIndex-${storeName}`, cellName);
+    }
+
+  } else {
+    setTimeout(() => createIndex (storeName,cellName), 50); // prüft alle 50ms
+  }
+}
 
 //TabellenDaten auslesen
 function processingTableData (status) {
@@ -315,12 +312,11 @@ document.getElementById('toolBar-newObject').addEventListener('click', function(
 
   if (id === 'waitNewObject') {
     processingTableData('waiting')
-    insertInDb(document.getElementById('newObject-container').querySelector('h3').textContent.toLowerCase().replaceAll(" ", "-"),newData)
   } else if (id === 'confirmNewObject') {
     processingTableData('confirmed')
-    insertInDb(document.getElementById('newObject-container').querySelector('h3').textContent.toLowerCase().replaceAll(" ", "-"),newData)
   }
 
+  insertInDb(document.getElementById('newObject-container').querySelector('h3').textContent.toLowerCase().replaceAll(" ", "-"),newData)
   deletingObjectsOutContainer('table-newObject','current-newObject')
 });
 
