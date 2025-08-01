@@ -13,7 +13,16 @@ statustypen pro Tabelle
 
 für alle Eigenschaften nach welchen ich besonders schnell suchen möchte
 
+//Task-board-Blöcke: (unterscheiden sich in Position und Farbe der Darstellung und weitere Automatisierungen oder deren Statistikrelevanz)
+1. Hinweise                     (Tages- und Ereignisfixiert, Erinnerungen an bevorstehende Termine)
+2. Termine                      (alle Dinge, mit fester Uhrzeit)
+3. wiederkehrende Ereig.        (Habits oder auch nicht Habits, die Darstellung von bestimmten Daten passiert später, bei Erstellen wird aber dennoch unterschieden)
+4. Important Tasks
+5. nächsten Schritte Projekten  (Immer die )
+6. Medium Tasks                 (sortiert nach Wichtigkeit und Erstellungsdatum und Uhrzeit)
 
+Den Großteil den ich haben werde, werden feste Termine und nächste Projektschritte sein.
+Status, Type, Uhrzeit/Alphabetisch/Importance & Alphabetisch,
 */
 
 
@@ -26,14 +35,13 @@ let   dateToday             = new Date();
 let   choosenDate           = new Date();
 let   day_clicks            = 0;
 let   click_marker          = 0;
-let   newData               = {};
 let   pageInFrontHub        = 'subcontainer-hub-one';
 const homePageHub           = 'subcontainer-hub-one';
 
 document.getElementById('newObjectPicker').style.display = 'none';
 document.getElementById('taskHistory').style.display = 'none';
 document.getElementById('newObject-container').style.display = 'none';
-document.getElementById("datePicker").style.display = "none";
+document.getElementById('datePicker').style.display = "none";
 
 
 // region Database
@@ -46,9 +54,12 @@ let dbVersion;
 request.onsuccess = function (event) {
   db = event.target.result;
   dbVersion = db.version;
+
+  //manageTableInDb('clear','mainTable');
 };
 
 //Index
+//index Daten auslesen und damit das Hub und das Task-Board bestücken
 
 
 //um 00:00 soll das heutige Datum umwechseln
@@ -81,13 +92,15 @@ function changeDateDay () {
 changeCurrentDate(generateDateAsStr(dateToday)); //setzt immer beim neustarten der app das heutige Datum
 
 // db managment
-function insertInDb (type,object) {
-    const store = db.transaction(type, 'readwrite').objectStore(type);
+function insertInDb (dbName,object) {
+    const store = db.transaction(dbName, 'readwrite').objectStore(dbName);
     /// generateShortId sollte immer einen richtigen key zurückgeben, sonst kommt es zu problemene,
     /// diese Fehler müssen abgefangen und behandelt werden
     object.id = generateShortId();
     store.put(object)
     };
+
+
 
 function changeStatusOfObject (storeName,id,newStatus) {
   const store = db.transaction(type, 'readwrite').objectStore(storeName);
@@ -116,13 +129,16 @@ function manageTableInDb (type,name) {
     const request = indexedDB.open('Web-App', dbVersion);
 
     request.onupgradeneeded = function (event) {
-      let table = event.target.result;
+      const db = event.target.result;
+      const table = event.target.transaction.objectStore(name);
 
       if (type === 'c') {
-        const store = table.createObjectStore(name, { keyPath: "id" });  // neue Tabelle erstellen
+        const store = db.createObjectStore(name, { keyPath: "id" });  // neue Tabelle erstellen
         store.createIndex(`statusIndex-${name}`, "status");
       } else if (type === 'd') {
-        table.deleteObjectStore(name);
+        db.deleteObjectStore(name);
+      } else if (type === 'clear') {
+        table.clear();
       }
     }
 
@@ -135,7 +151,7 @@ function manageTableInDb (type,name) {
   }
 }
 
-function createIndex (storeName,cellName) {
+function manageIndex (type,storeName,indexName,cellName) {
   if (db) {
     db.close();
     dbVersion += 1
@@ -144,7 +160,11 @@ function createIndex (storeName,cellName) {
 
     request.onupgradeneeded = function (event) {
       let store = event.target.transaction.objectStore(storeName);
-      store.createIndex(`statusIndex-${storeName}`, cellName);
+      if (type === 'c') {
+        store.createIndex(`${indexName}-${storeName}`, cellName,{ unique: false });
+      } else if (type === 'd') {
+        store.deleteIndex(`${indexName}-${storeName}`);
+      }
     }
 
   } else {
@@ -154,20 +174,34 @@ function createIndex (storeName,cellName) {
 
 //TabellenDaten auslesen
 function processingTableData (status) {
-  const tableData = document.getElementById('table-newObject').querySelectorAll('.current-newObject')
+  const tableData = document.getElementById('table-newObject').querySelectorAll('.current-newObject');
+  let   titleMarker = 0;
 
-  if (tableData.length > 0){ }
+  newData = {};
+
+  if (tableData.length > 0){
     tableData.forEach(row => {
       let typeOfContent = row.querySelectorAll('td')[0].textContent;
       let textContent   = row.querySelectorAll('td')[1].textContent.trim();
-      if (typeOfContent.length > 0) {
-          newData[typeOfContent] = textContent;
+      if (typeOfContent === 'Title' && textContent.length > 0) {
+        titleMarker = 1;
+        console.log('Marker');
+        console.log(titleMarker);
+      }
+      if (textContent.length > 0) {
+        newData[typeOfContent] = textContent;
+        console.log(newData);
       };
     });
-
-    newData.status = status;
-
   }
+
+  newData.status      = status;
+  newData.type        = document.getElementById('newObject-container').querySelector('h3').textContent.toLowerCase().replaceAll(" ", "-");
+
+  if (titleMarker === 1) {
+    insertInDb('mainTable',newData);
+  };
+}
 
 // DOM managment
 function deletingObjectsOutContainer (container, className) {
@@ -180,23 +214,24 @@ document.getElementById('newObjectPicker').addEventListener('click', function(ev
 
   // tabellen configs
   const newObjectArrays = {
-    arrayTask: ['Test1'],
+    arrayTask: ['Title'],
+    one: ['Title'],
+    newObjectPicker: ['Title'],
     //arrayTask: ['Title','Content','Deadline','Categorie','Pictures','Files'],
-    arrayBlog: ['Test2','Test4','Test2','Test4','Test2','Test4','Test2','Test4','Test2','Test4','Test2','Test4'],
+    arrayBlog: ['Titel','Test4','Test2','Test4','Test2','Test4','Test2','Test4','Test2','Test4','Test2','Test4']
     //arrayBlog: ['Title','Content','Pictures','Files'],
     //arrayProject: ['Title','']
   }
 
   document.getElementById('newObjectPicker').style.display = 'none';
-  document.getElementById('newObject-container').style.removeProperty('display');
-  pageInFrontHub = 'newObject-container'
 
   // Herausfinden, welches Kind geklickt wurde
   const clickedElement = event.target;
 
   // Beispiel: data-id auslesen
-  const id = clickedElement.id.split("-").at(-1);
-
+  const id = clickedElement.id.split("-").at(-1); //type auslesen
+  console.log('id');
+  console.log(id);
   // ändert die Überschrift des newObject-previews
   document.getElementById('heading-newObject').textContent = id
 
@@ -214,6 +249,9 @@ document.getElementById('newObjectPicker').addEventListener('click', function(ev
 
 
   });
+
+  document.getElementById('newObject-container').style.removeProperty('display');
+  pageInFrontHub = 'newObject-container'
 
 });
 
@@ -235,9 +273,8 @@ document.getElementById('navigation-bar-tasks').addEventListener('click', functi
       // Hub hinzugefügt werden
     } else if (id !== pageInFrontHub) {
       if (pageInFrontHub === 'newObject-container') {
-        processingTableData('waiting')
-        insertInDb(document.getElementById('newObject-container').querySelector('h3').textContent.toLowerCase().replaceAll(" ", "-"),newData) /// debuggen !
-        deletingObjectsOutContainer('table-newObject','current-newObject')
+        processingTableData('waiting');
+        deletingObjectsOutContainer('table-newObject','current-newObject');
       }
       document.getElementById(pageInFrontHub).style.display = 'none';
       document.getElementById(id).style.removeProperty('display');
@@ -251,9 +288,8 @@ document.getElementById('navigation-bar-tasks').addEventListener('click', functi
       pageInFrontHub = id;
     }  else if (id === pageInFrontHub || 'newObject-container' === pageInFrontHub) { //wenn ich den Knopf für das öffnen nochmal nehme
       if (pageInFrontHub === 'newObject-container') {
-        processingTableData('waiting')
-        insertInDb(document.getElementById('newObject-container').querySelector('h3').textContent.toLowerCase().replaceAll(" ", "-"),newData)
-        deletingObjectsOutContainer('table-newObject','current-newObject')
+        processingTableData('waiting');
+        deletingObjectsOutContainer('table-newObject','current-newObject');
       }
       document.getElementById(pageInFrontHub).style.display = "none";
       document.getElementById(homePageHub).style.removeProperty('display');
@@ -275,9 +311,8 @@ document.getElementById('navigation-bar-tasks').addEventListener('click', functi
       pageInFrontHub = homePageHub;
     } else if (id !== pageInFrontHub) { //wenn ich von einem Fenster ohne homepage in das andere springe
       if (pageInFrontHub === 'newObject-container') {
-        processingTableData('waiting')
-        insertInDb(document.getElementById('newObject-container').querySelector('h3').textContent.toLowerCase().replaceAll(" ", "-"),newData)
-        deletingObjectsOutContainer('table-newObject','current-newObject')
+        processingTableData('waiting');
+        deletingObjectsOutContainer('table-newObject','current-newObject');
       }
       document.getElementById(pageInFrontHub).style.display = 'none';
       document.getElementById(id).style.removeProperty('display');
@@ -316,8 +351,7 @@ document.getElementById('toolBar-newObject').addEventListener('click', function(
     processingTableData('confirmed')
   }
 
-  insertInDb(document.getElementById('newObject-container').querySelector('h3').textContent.toLowerCase().replaceAll(" ", "-"),newData)
-  deletingObjectsOutContainer('table-newObject','current-newObject')
+  deletingObjectsOutContainer('table-newObject','current-newObject');
 });
 
 // #endregion
