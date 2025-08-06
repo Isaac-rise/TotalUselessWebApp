@@ -59,21 +59,22 @@ request.onsuccess = function (event) {
 
   //manageTableInDb('clear','mainTable');
   
+
   // Elemente in Hub und Task laden
   const tx    = db.transaction('mainTable','readonly');
   const store = tx.objectStore('mainTable');
   const index = store.index('statusTypeIndex-mainTable');
-
-
+  
+  
   objectTypes.forEach(function(objectType,arrayIndex) { //für jeden Objecttyp ...
-
+  
     // task-board bestücken
     const confirmedObjects = index.getAll(['confirmed',objectType]);
     
     confirmedObjects.onsuccess = function(event) {
       const result = event.target.result;
       /// wenn Tasks, dann sollen diese zunächst nach ihrer Zeit sortiert werden, damit ich diese dann in der richtigen Reihenfolge einfügen kann.
-
+  
       if (result.length > 0) {            // prüfen ob eine Objekt vorhanden ist 
         
         // Sammelcontainer clonen
@@ -81,57 +82,46 @@ request.onsuccess = function (event) {
         
         // jedes gefundene Objekt aufbereiten und dann in den Sammelcontainer einfügen
         result.forEach(function(object) { //für jedes Objekt
-
+  
           const title = object.Title;
           const time  = object.Time; // time wann der Termin statt findet
           const id    = object.id; 
-
-          console.log('title');
-          console.log(title);
           
           const newObject = generateSmallContainer(title,id,time);
-
+  
           newContainerFTB.querySelector('div').appendChild(newObject);
       
         });
-
-        newContainerFTB.querySelector('#template-task-woa').remove();
-        newContainerFTB.querySelector('#template-task-wao').remove();
         document.getElementById('taskBoard').appendChild(newContainerFTB);
       }
-
+  
     };
-
+  
     //hub bestücken
     const waitingObjects = index.getAll(['waiting',objectType]); //...die entsprechenden Objekte raussuchen    
-
+  
     waitingObjects.onsuccess = function(event) {
       const result = event.target.result;
-
+  
       result.forEach(function(object) {
       
       const title = object.Title;
       const id    = object.id;
-
+  
       insertInToHub(title,id);
       });
-
+  
     };
   
     });
+
 }
 
-function generateNewObject (templateName,title,id) {
-  const newObject = document.getElementById(templateName).cloneNode(true);  // titel container kopieren
-  newObject.removeAttribute('id');
-  newObject.id = id;
-  newObject.querySelector('.title').textContent = title;
 
-  return newObject;
-}
 
 function generateTaskBoardContainer (arrayIndex,objectType){
-  const newContainerFTB = document.getElementById('template-Object-Container-BIG').cloneNode(true); // oberen container kopieren
+  const newContainerFTB = document.getElementById('template-Object-Container-for-Task-board').cloneNode(true); // oberen container kopieren
+  //newContainerFTB.style.removeProperty('display');                              //den kopierten Container sichtbar machen
   newContainerFTB.removeAttribute('id');                                        // die id des oberen container löschen
   newContainerFTB.id = `task-board-block-${objectType}`;                                              // eigene id für container setzen
   newContainerFTB.style.backgroundColor = objectColor[arrayIndex];
@@ -142,11 +132,21 @@ function generateSmallContainer (title,id,time) {
   let newObject;
 
   if (time) {        
-    newObject = generateNewObject('template-task-woa',title,id);      // entscheiden ob Titel mit oder ohne Add-on 
+    newObject = generateNewObject('template-task-wao',title,id);      // entscheiden ob Titel mit oder ohne Add-on 
     newObject.querySelector('.add-on').textContent = time;    
   } else {
-    newObject = generateNewObject('template-task-wao',title,id);  
+    newObject = generateNewObject('template-task-woa',title,id);  
   }
+
+  return newObject;
+}
+
+function generateNewObject (templateName,title,id) {
+  const newObject = document.getElementById(templateName).cloneNode(true);  // titel container kopieren
+  //newObject.style.removeProperty('display');                                      //denn entsprechenden container für den Titel sichbar machen
+  newObject.removeAttribute('id');
+  newObject.id = id;
+  newObject.querySelector('.title').textContent = title;
 
   return newObject;
 }
@@ -169,6 +169,8 @@ function insertInToTaskBoard (title,type,id,time) {
 function insertInToHub (title,id) {
 
   const newObject = document.getElementById('template-unfinished-newObjects').cloneNode(true);      // template titel container kopieren
+  
+  newObject.style.removeProperty('display');                                                        // container sichtbar machen
   newObject.removeAttribute('id');                                                                  // 
   newObject.dbID = id;                                                                              // db-id als id setzen
   newObject.querySelector('#title-unfinished-newObject').textContent = title;                       // title setzen
