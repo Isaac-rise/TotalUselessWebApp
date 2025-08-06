@@ -37,7 +37,7 @@ let   day_clicks            = 0;
 let   click_marker          = 0;
 let   pageInFrontHub        = 'subcontainer-hub-one';
 const homePageHub           = 'subcontainer-hub-one';
-let   objectTypes           = ['task','blog']
+let   objectTypes           = ['task','blog'] // müssen eindeutig sein, dürfen sich nicht wiederholen
 let   objectColor           = ['blue','green']
 
 document.getElementById('newObjectPicker').style.display = 'none';
@@ -85,9 +85,6 @@ request.onsuccess = function (event) {
           const title = object.Title;
           const time  = object.Time; // time wann der Termin statt findet
           const id    = object.id; 
-
-          console.log('title');
-          console.log(title);
           
           const newObject = generateSmallContainer(title,id,time);
 
@@ -156,12 +153,15 @@ function insertInToTaskBoard (title,type,id,time) {
     newObject = generateSmallContainer(title,id,time);
     document.getElementById(`task-board-block-${type}`).querySelector('div').appendChild(newObject);
   } else {
+
     objectTypes.forEach(function(object,arrayIndex) {
       if (object === type) {
         newContainerFTB = generateTaskBoardContainer(arrayIndex,type);
       }})
     newObject = generateSmallContainer(title,id,time);
-    newContainerFTB.appendChild(newObject);
+    newContainerFTB.querySelector('div').appendChild(newObject);
+    newContainerFTB.querySelector('#template-task-woa').remove();
+    newContainerFTB.querySelector('#template-task-wao').remove();
     document.getElementById('taskBoard').appendChild(newContainerFTB);
   }
 };
@@ -219,7 +219,7 @@ function insertInDb (dbName,object) {
     object.id = id;
     const dateObject = new Date();
     object.storingDate = dateObject.getFullYear();
-    object.storedTime = `${dateObject.getHours()}-${dateObject.getMinutes()}-${dateObject.getSeconds()}`;
+    object.storedTime = `${dateObject.getHours()}-${dateObject.getMinutes()}-${dateObject.getSeconds()}`; /// wieso wird kein Datum hinzugefügt? 
     /// wann wurde das Element eingefügt speichern 
 
     store.put(object)
@@ -321,13 +321,14 @@ function processingTableData (status) {
 
   newData.status      = status;
   newData.type        = document.getElementById('newObject-container').querySelector('h3').textContent.toLowerCase().replaceAll(" ", "-");
-
+  
+  
   if (titleMarker === 1) {
     const id = insertInDb('mainTable',newData);
     if (status === 'waiting') {
       insertInToHub(newData.Title,id);
     } else {
-      if (newData.type === 'Task') {
+      if (newData.type === 'task') {
         insertInToTaskBoard(newData.Title,newData.type,id,newData.Time); /// hier sicher stellen  das es auch zu keinen Fehlern kommt, selbst wenn die Zeit beim erstellen nicht gesetzt wurde, Termin sollte nur bestätigt werden können wenn auch eine Zeit dabei ist. 
       } else {
         insertInToTaskBoard(newData.Title,newData.type,id); 
@@ -351,7 +352,7 @@ document.getElementById('newObjectPicker').addEventListener('click', function(ev
     one: ['Title'],
     newObjectPicker: ['Title'],
     //arrayTask: ['Title','Content','Deadline','Categorie','Pictures','Files'],
-    arrayBlog: ['Titel','Test4','Test2','Test4','Test2','Test4','Test2','Test4','Test2','Test4','Test2','Test4']
+    arrayBlog: ['Title','Test4','Test2','Test4','Test2','Test4','Test2','Test4','Test2','Test4','Test2','Test4']
     //arrayBlog: ['Title','Content','Pictures','Files'],
     //arrayProject: ['Title','']
   }
@@ -373,7 +374,6 @@ document.getElementById('newObjectPicker').style.display = 'none';
     const newLine = document.getElementById('template-row-newObject').cloneNode(true);  //clont das template
 
     newLine.querySelector('#template-row-newObject-parameter').textContent = item; //ändert den textConten in dem Id-container
-    newLine.style.removeProperty('display');  //löscht das display: none;
     newLine.querySelector('td').removeAttribute('id');
     newLine.removeAttribute('id');
     newLine.classList.add('current-newObject');
